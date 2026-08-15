@@ -1830,25 +1830,6 @@ body.is-sheet .mail-fab{
   body.is-sheet .detail-scrim{display:block;opacity:1;pointer-events:auto}
 }
 .detail-scrim,.detail-scrim[hidden]{display:none}
-.ios-bar{
-  display:none;
-  position:fixed;
-  left:0;
-  bottom:-8px;
-  width:100%;
-  min-height:12px;
-  margin:0;
-  padding:0;
-  background:#ffffff;
-  pointer-events:none;
-  z-index:5;
-}
-@supports (-webkit-text-size-adjust: none) and (font: -apple-system-body) and (-webkit-touch-callout: none){
-  @media (max-width:800px){
-    .ios-bar{display:block}
-  }
-}
-
 /* Accent control */
 .accent-chip{
   display:inline-flex;align-items:center;gap:8px;
@@ -2363,7 +2344,6 @@ body.is-sheet .mail-fab{
 </style>
 </head>
 <body>
-<div class="ios-bar" aria-hidden="true"></div>
 <div class="shell">
 <div class="gallery" id="gallery" aria-label="UI gallery">
 <section class="detail" id="detail">
@@ -4763,7 +4743,6 @@ window.vrSound=(function(){
     fab.classList.add("is-open");
     chip.classList.add("is-open");
     chip.setAttribute("aria-expanded","true");
-    document.documentElement.classList.add("is-mail-open");
     if(window.vrSound) vrSound.open();
   }
   function close(){
