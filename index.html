@@ -1613,7 +1613,7 @@ body.is-sheet .mail-fab{
   opacity:0;pointer-events:none;transform:translateY(8px);
 }
 @media (max-width:800px){
-  .mail-fab{right:12px;bottom:calc(18px + var(--vv-bottom, 0px));overflow:visible}
+  .mail-fab{right:12px;bottom:18px;overflow:visible}
   .mail-panel{
     position:fixed;
     left:12px;right:12px;width:auto;
@@ -1733,7 +1733,7 @@ body.is-sheet .mail-fab{
 /* Mobile UX pass (after density so it wins) */
 @media (max-width:800px){
   .gallery{
-    padding-bottom:calc(80px + var(--vv-bottom, 0px));
+    padding-bottom:80px;
   }
   .tile-inner{padding:20px 16px 56px}
   .tile-name{
@@ -1758,7 +1758,7 @@ body.is-sheet .mail-fab{
   .detail{
     position:fixed;
     left:12px;right:12px;top:auto;
-    bottom:calc(12px + var(--vv-bottom, 0px));
+    bottom:12px;
     width:auto;
     height:calc(100svh - 24px);
     min-height:calc(100svh - 24px);
@@ -1807,7 +1807,7 @@ body.is-sheet .mail-fab{
   }
   .chrome-fab{
     left:12px;right:auto;
-    bottom:calc(18px + var(--vv-bottom, 0px));
+    bottom:18px;
     overflow:visible;
     justify-content:flex-start;
     z-index:30;
@@ -4522,15 +4522,13 @@ window.vrSound=(function(){
   };
 })();
 
-(function syncVisualBottom(){
+(function syncKeyboard(){
   const root=document.documentElement;
   function set(){
     const vv=window.visualViewport;
-    if(!vv){ root.style.setProperty("--vv-bottom","0px"); return; }
+    if(!vv){ root.classList.remove("is-keyboard"); return; }
     const gap=Math.max(0, window.innerHeight - vv.offsetTop - vv.height);
-    const keyboard=gap>140;
-    root.style.setProperty("--vv-bottom", (keyboard?0:Math.min(gap,64))+"px");
-    root.classList.toggle("is-keyboard", keyboard);
+    root.classList.toggle("is-keyboard", gap>140);
   }
   set();
   if(window.visualViewport){
