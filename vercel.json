@@ -1,0 +1,13 @@
+{
+  "headers": [
+    {
+      "source": "/api/og",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=60, s-maxage=600" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/day/:day", "destination": "/index.html" }
+  ]
+}

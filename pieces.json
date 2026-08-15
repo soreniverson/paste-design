@@ -1,0 +1,97 @@
+{
+  "day-01": {
+    "day": "Day 1",
+    "title": "Confetti",
+    "desc": "Send lands with a spring, a sheen, and a tight burst."
+  },
+  "day-02": {
+    "day": "Day 2",
+    "title": "Password reveal",
+    "desc": "Eye morphs. Mask softens into plain text."
+  },
+  "day-03": {
+    "day": "Day 3",
+    "title": "Soft toggle",
+    "desc": "Lagged ease on, no hard snap."
+  },
+  "day-04": {
+    "day": "Day 4",
+    "title": "Segmented control",
+    "desc": "Pill indicator eases between Day, Week, and Month."
+  },
+  "day-05": {
+    "day": "Day 5",
+    "title": "Hold to confirm",
+    "desc": "Hold builds pressure. Release cancels. Success lands."
+  },
+  "day-06": {
+    "day": "Day 6",
+    "title": "Like burst",
+    "desc": "Heart pops with a tiny particle burst on like."
+  },
+  "day-07": {
+    "day": "Day 7",
+    "title": "Morph checkbox",
+    "desc": "Custom check with a springy pop when it draws in."
+  },
+  "day-08": {
+    "day": "Day 8",
+    "title": "Snap stepper",
+    "desc": "Digits reel. Hold accelerates. Ends soft-disable."
+  },
+  "day-09": {
+    "day": "Day 9",
+    "title": "Snap slider",
+    "desc": "Drag free. Release and it springs to the tick."
+  },
+  "day-10": {
+    "day": "Day 10",
+    "title": "Clear input",
+    "desc": "Clear arrives softly. Clearing exhales the field."
+  },
+  "day-11": {
+    "day": "Day 11",
+    "title": "OTP input",
+    "desc": "Four cells. Type, paste, or backspace through."
+  },
+  "day-12": {
+    "day": "Day 12",
+    "title": "Value scrub",
+    "desc": "Drag the amount. Digits reel as it moves."
+  },
+  "day-13": {
+    "day": "Day 13",
+    "title": "Slide to unlock",
+    "desc": "Slide to commit. Early release springs home."
+  },
+  "day-14": {
+    "day": "Day 14",
+    "title": "Copy link",
+    "desc": "One click. Link copied. Check springs in."
+  },
+  "day-15": {
+    "day": "Day 15",
+    "title": "Weekly pulse",
+    "desc": "Bars spring in. Hover a day to read the pulse."
+  },
+  "day-16": {
+    "day": "Day 16",
+    "title": "Drop zone",
+    "desc": "Drop or browse. Card compresses. Name reels in."
+  },
+  "day-17": {
+    "day": "Day 17",
+    "title": "Fart react",
+    "desc": "Hold the bubble. It farts until you let go."
+  },
+  "day-18": {
+    "day": "Day 18",
+    "title": "Flick snooze",
+    "desc": "Flick the alarm. It flies. Five minutes reel in."
+  },
+  "day-19": {
+    "day": "Day 19",
+    "title": "Peel",
+    "desc": "Pull the corner. The paper folds. It snaps free."
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "visual-repo",
+  "private": true,
+  "dependencies": {
+    "@vercel/og": "^0.6.8"
+  }
+}
