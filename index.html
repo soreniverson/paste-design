@@ -3737,7 +3737,7 @@ function wireGrav(root){
   const input=wrap.querySelector(".ds-grav-in");
   const bin=wrap.querySelector(".ds-grav-bin");
   if(!field||!input||!bin) return;
-  const G=2200, REST=0.34, FRIC=0.82, VR_FLOOR=0.96, VR_AIR=0.995, MAX=28;
+  const G=980, REST=0.16, FRIC=0.88, VR_FLOOR=0.94, VR_AIR=0.985, MAX=28;
   let bodies=[];
   let prev="";
   let raf=0, lastT=0, shakeT=0;
@@ -3772,10 +3772,10 @@ function wireGrav(root){
         el,
         x:16+Math.random()*28,
         y:2,
-        vx:-80+Math.random()*220,
-        vy:-40+Math.random()*80,
-        r:-18+Math.random()*36,
-        vr:-220+Math.random()*440,
+        vx:-40+Math.random()*120,
+        vy:-10+Math.random()*36,
+        r:-12+Math.random()*24,
+        vr:-90+Math.random()*180,
         w,h,rad:Math.max(w,h)*0.52+0.7,air:true,popping:false
       };
     }
@@ -3794,7 +3794,7 @@ function wireGrav(root){
       return;
     }
     b.popping=true;
-    b.vy=-420;
+    b.vy=-240;
     b.vr=-280+Math.random()*560;
     b.vx+=-80+Math.random()*160;
     b.el.style.transition="opacity .28s ease";
@@ -3903,7 +3903,7 @@ function wireGrav(root){
               a.x+=dir*ox*0.5; c.x-=dir*ox*0.5;
               const rv=a.vx-c.vx;
               if(rv*dir>0){
-                const imp=rv*0.5;
+                const imp=rv*0.32;
                 a.vx-=imp; c.vx+=imp;
               }
             }else{
@@ -3911,7 +3911,7 @@ function wireGrav(root){
               a.y+=dir*oy*0.5; c.y-=dir*oy*0.5;
               const rv=a.vy-c.vy;
               if(rv*dir>0){
-                const imp=rv*0.5;
+                const imp=rv*0.32;
                 a.vy-=imp; c.vy+=imp;
               }
             }
