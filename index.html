@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#ffffff" />
-<meta name="color-scheme" content="light" />
 <title>Visual Repository</title>
 <meta name="description" content="Polished UI details, one piece at a time." />
 <meta property="og:type" content="website" />
@@ -1597,8 +1595,15 @@ body.is-sheet .mail-fab{
   opacity:0;pointer-events:none;transform:translateY(8px);
 }
 @media (max-width:800px){
-  .mail-fab{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
-  .mail-panel{max-width:min(280px, calc(100vw - 24px))}
+  .mail-fab{right:12px;bottom:calc(12px + var(--vv-bottom, 0px))}
+  .mail-panel{
+    width:min(320px, calc(100vw - 24px));
+    max-width:calc(100vw - 24px);
+    padding:14px;
+  }
+  .mail-copy{font-size:13px;line-height:1.4}
+  .mail-input{height:44px;font-size:16px}
+  .mail-go{height:44px;padding:0 14px}
 }
 @media (hover:hover) and (pointer:fine){
   .mail-chip:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.55),0 14px 32px -12px rgba(0,0,0,.6)}
@@ -1699,7 +1704,7 @@ body.is-sheet .mail-fab{
 /* Mobile UX pass (after density so it wins) */
 @media (max-width:800px){
   .gallery{
-    padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));
+    padding-bottom:calc(80px + var(--vv-bottom, 0px));
   }
   .tile-inner{padding:20px 16px 56px}
   .tile-name{
@@ -1723,16 +1728,17 @@ body.is-sheet .mail-fab{
   .tile{min-height:0}
   .detail{
     position:fixed;
-    left:0;right:0;top:auto;bottom:0;width:auto;
-    height:min(92dvh,100%);
-    max-height:100dvh;
-    border-radius:20px 20px 0 0;
-    border:0;
-    border-top:0.5px solid var(--line);
-    box-shadow:0 -18px 48px -20px rgba(0,0,0,.35);
-    transform:translateY(calc(100% + 24px));
+    left:12px;right:12px;top:auto;
+    bottom:calc(12px + var(--vv-bottom, 0px));
+    width:auto;
+    height:auto;
+    max-height:calc(100svh - 24px);
+    border-radius:20px;
+    border:0.5px solid var(--line);
+    box-shadow:0 28px 64px -28px rgba(0,0,0,.4),0 12px 28px -16px rgba(0,0,0,.16);
+    transform:translateY(calc(100% + 36px));
     padding-bottom:0;
-    background:var(--ds-stage);
+    background:var(--ds-surface);
     z-index:20;
   }
   .gallery.is-open .detail{transform:translateY(0)}
@@ -1764,14 +1770,14 @@ body.is-sheet .mail-fab{
   .copy-code,.ds-icon-btn{width:40px;height:40px}
   .close,.ds-icon-btn.close{width:40px;height:40px}
   .detail-body{
-    padding:20px 16px calc(24px + env(safe-area-inset-bottom,0px));
-    margin:0;
-    border-radius:0;
+    padding:20px 16px 24px;
+    margin:0 10px 10px;
+    border-radius:14px;
     background:var(--ds-stage);
   }
   .chrome-fab{
-    left:12px;right:12px;
-    bottom:calc(12px + env(safe-area-inset-bottom));
+    left:12px;right:auto;
+    bottom:calc(12px + var(--vv-bottom, 0px));
     justify-content:flex-start;
     z-index:30;
     transition:opacity .28s ease,transform .34s cubic-bezier(.22,1,.36,1);
@@ -1797,8 +1803,8 @@ body.is-sheet .mail-fab{
 
 /* Accent control */
 .accent-chip{
-  display:inline-flex;align-items:center;gap:10px;
-  height:40px;padding:0 14px 0 10px;border-radius:999px;border:0;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+  height:40px;padding:0 8px 0 10px;border-radius:999px;border:0;cursor:pointer;
   background:rgba(255,255,255,.94);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.5),0 10px 28px -12px rgba(0,0,0,.55);
@@ -1816,7 +1822,7 @@ body.is-sheet .mail-fab{
 }
 .accent-chip-label{letter-spacing:-.01em}
 .accent-chip-caret{
-  width:14px;height:14px;margin-left:2px;opacity:.45;
+  width:14px;height:14px;margin-left:0;opacity:.45;
   transition:transform .42s cubic-bezier(.34,1.45,.64,1),opacity .2s ease;
 }
 .accent-chip.is-open{background:#fff;box-shadow:inset 0 0 0 0.5px var(--ds-line),0 6px 18px -10px rgba(0,0,0,.35)}
@@ -4485,6 +4491,22 @@ window.vrSound=(function(){
   };
 })();
 
+(function syncVisualBottom(){
+  const root=document.documentElement;
+  function set(){
+    const vv=window.visualViewport;
+    if(!vv){ root.style.setProperty("--vv-bottom","0px"); return; }
+    const gap=Math.max(0, window.innerHeight - vv.offsetTop - vv.height);
+    root.style.setProperty("--vv-bottom", gap+"px");
+  }
+  set();
+  if(window.visualViewport){
+    visualViewport.addEventListener("resize", set);
+    visualViewport.addEventListener("scroll", set);
+  }
+  window.addEventListener("orientationchange", set);
+})();
+
 (function initDensity(){
   const btn=document.getElementById("densityBtn");
   const gal=document.getElementById("gallery");
@@ -4859,7 +4881,8 @@ window.vrSound=(function(){
     chip.setAttribute("aria-expanded","true");
     if(window.vrSound) vrSound.open();
     const input=document.getElementById("mailEmail");
-    if(input) setTimeout(function(){ input.focus(); }, 40);
+    const coarse=window.matchMedia("(pointer:coarse)").matches;
+    if(input && !coarse) setTimeout(function(){ input.focus(); }, 40);
   }
   function toggle(){ fab.classList.contains("is-open")?close():open(); }
   function markOn(){
