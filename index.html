@@ -1696,21 +1696,6 @@ body.is-sheet .mail-fab{
 .density-btn[data-density="1"] .density-icon i:nth-child(2),
 .density-btn[data-density="1"] .density-icon i:nth-child(3),
 .density-btn[data-density="1"] .density-icon i:nth-child(4){inset:48% 48% 48% 48%;opacity:0}
-/* gooey only while morphing */
-.density-btn.is-gooing .density-icon{
-  background:#fff;
-  filter:blur(1.7px) contrast(18);
-}
-.density-btn.is-gooing .density-icon i{
-  opacity:1;
-  transition:inset .58s cubic-bezier(.34,1.45,.64,1),border-radius .5s cubic-bezier(.34,1.45,.64,1);
-}
-.density-btn.is-gooing[data-density="2"] .density-icon i:nth-child(1),
-.density-btn.is-gooing[data-density="2"] .density-icon i:nth-child(3){inset:0 56% 0 0;border-radius:2.5px}
-.density-btn.is-gooing[data-density="2"] .density-icon i:nth-child(2),
-.density-btn.is-gooing[data-density="2"] .density-icon i:nth-child(4){inset:0 0 0 56%;border-radius:2.5px}
-.density-btn.is-gooing[data-density="1"] .density-icon i{inset:0;border-radius:3px;opacity:1}
-
 /* Gallery density — density wins over breakpoints */
 .gallery[data-density="4"]{
   grid-template-columns:repeat(4,1fr);
@@ -1739,9 +1724,7 @@ body.is-sheet .mail-fab{
 .gallery .tile.is-flipping{z-index:2;will-change:transform}
 @media (prefers-reduced-motion:reduce){
   .density-btn.is-pop{animation:none}
-  .density-icon{filter:none;background:transparent}
   .density-icon i{transition:none}
-  .density-btn.is-gooing .density-icon{filter:none;background:transparent}
 }
 
 
@@ -1750,7 +1733,7 @@ body.is-sheet .mail-fab{
 /* Mobile UX pass (after density so it wins) */
 @media (max-width:800px){
   .gallery{padding-bottom:0}
-  body{padding-bottom:calc(80px + env(safe-area-inset-bottom, 0px))}
+  body{padding-bottom:0}
   .tile-inner{padding:20px 16px 56px}
   .tile-name{
     opacity:1;transform:none;
@@ -1768,9 +1751,10 @@ body.is-sheet .mail-fab{
   }
   .gallery[data-density="1"]{
     grid-template-columns:1fr!important;
-    grid-auto-rows:minmax(70dvh,auto)!important;
+    grid-auto-rows:minmax(100lvh,auto)!important;
   }
   .tile{min-height:0}
+  .tile:last-of-type{min-height:100lvh}
   .detail{
     position:fixed;
     left:12px;right:12px;top:auto;
@@ -4618,18 +4602,12 @@ window.vrSound=(function(){
 
   apply(cols, false);
 
-  let gooTimer=0;
   btn.addEventListener("click", ()=>{
     const idx=cycle.indexOf(galleryCols);
     const next=cycle[(idx+1)%cycle.length];
     btn.classList.remove("is-pop");
     void btn.offsetWidth;
     btn.classList.add("is-pop");
-    if(!reduce){
-      btn.classList.add("is-gooing");
-      clearTimeout(gooTimer);
-      gooTimer=setTimeout(function(){ btn.classList.remove("is-gooing"); }, 620);
-    }
     apply(next, true);
     if(window.vrSound) vrSound.tick(next===4?1.14:next===2?0.94:0.76);
   });
