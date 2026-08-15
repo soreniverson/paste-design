@@ -3714,13 +3714,13 @@ function gravMarkup(interactive){
   const tab = interactive ? "" : " tabindex=\"-1\"";
   const hide = interactive ? "" : " aria-hidden=\"true\"";
   const pile = interactive ? "" : (
-    "<i class=\"ds-grav-ch\" style=\"transform:translate(28px,30px) rotate(-12deg)\">g</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(40px,28px) rotate(9deg)\">r</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(52px,31px) rotate(-6deg)\">a</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(64px,27px) rotate(14deg)\">v</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(76px,32px) rotate(-4deg)\">i</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(86px,29px) rotate(8deg)\">t</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(98px,31px) rotate(-14deg)\">y</i>"
+    "<i class=\"ds-grav-ch\" style=\"transform:translate(24px,28px) rotate(-10deg)\">g</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(40px,30px) rotate(8deg)\">r</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(56px,27px) rotate(-6deg)\">a</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(72px,31px) rotate(12deg)\">v</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(88px,29px) rotate(-4deg)\">i</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(100px,27px) rotate(9deg)\">t</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(116px,30px) rotate(-12deg)\">y</i>"
   );
   return "<div class=\"ds-grav\""+(interactive?"":" aria-hidden=\"true\"")+">"
     +"<div class=\"ds-grav-field\">"
@@ -3765,7 +3765,7 @@ function wireGrav(root){
     let b;
     if(reduceMotion){
       const n=bodies.filter(x=>!x.popping).length;
-      b={el,x:10+n*11+Math.random()*6,y:H-h-Math.random()*3,vx:0,vy:0,r:-12+Math.random()*24,vr:0,w,h,air:false,popping:false};
+      b={el,x:10+n*11+Math.random()*6,y:H-h-Math.random()*3,vx:0,vy:0,r:-12+Math.random()*24,vr:0,w,h,rad:Math.max(w,h)*0.52+0.7,air:false,popping:false};
       if(b.x>W-w) b.x=Math.max(0, W-w-Math.random()*18);
     }else{
       b={
@@ -3776,7 +3776,7 @@ function wireGrav(root){
         vy:-40+Math.random()*80,
         r:-18+Math.random()*36,
         vr:-220+Math.random()*440,
-        w,h,air:true,popping:false
+        w,h,rad:Math.max(w,h)*0.52+0.7,air:true,popping:false
       };
     }
     bodies.push(b);
@@ -3849,23 +3849,24 @@ function wireGrav(root){
       b.x+=b.vx*dt;
       b.y+=b.vy*dt;
       b.r+=b.vr*dt;
-      if(b.x<0){
-        b.x=0;
+      const cx=b.x+b.w*0.5, cy=b.y+b.h*0.5;
+      if(cx<b.rad){
+        b.x=b.rad-b.w*0.5;
         b.vx=Math.abs(b.vx)*REST+Math.random()*10;
         b.vr+=(Math.random()-0.5)*50;
-      }else if(b.x>W-b.w){
-        b.x=W-b.w;
+      }else if(cx>W-b.rad){
+        b.x=W-b.rad-b.w*0.5;
         b.vx=-Math.abs(b.vx)*REST-Math.random()*10;
         b.vr+=(Math.random()-0.5)*50;
       }
-      if(b.y<0){
-        b.y=0;
+      if(cy<b.rad){
+        b.y=b.rad-b.h*0.5;
         b.vy=Math.abs(b.vy)*REST;
       }
-      const floor=H-b.h;
-      if(b.y>=floor){
+      const floor=H-b.rad;
+      if(cy>=floor){
         const impact=b.vy;
-        b.y=floor;
+        b.y=floor-b.h*0.5;
         if(impact>0){
           if(!b.popping && b.air && impact>80 && window.vrSound) vrSound.tick(0.72);
           b.vy=-impact*REST;
@@ -3883,46 +3884,54 @@ function wireGrav(root){
       }
     }
     const live=bodies.filter(function(b){ return !b.popping; });
-    for(let pass=0;pass<2;pass++){
+    function clampCircle(b){
+      const cx=Math.max(b.rad, Math.min(W-b.rad, b.x+b.w*0.5));
+      const cy=Math.max(b.rad, Math.min(H-b.rad, b.y+b.h*0.5));
+      b.x=cx-b.w*0.5;
+      b.y=cy-b.h*0.5;
+    }
+    for(let pass=0;pass<8;pass++){
       for(let i=0;i<live.length;i++){
         for(let j=i+1;j<live.length;j++){
           const a=live[i], c=live[j];
-          const ax=a.x+a.w*0.5, ay=a.y+a.h*0.5;
-          const cx=c.x+c.w*0.5, cy=c.y+c.h*0.5;
-          const ox=(a.w+c.w)*0.5-Math.abs(ax-cx);
-          const oy=(a.h+c.h)*0.5-Math.abs(ay-cy);
-          if(ox>0 && oy>0){
-            if(ox<oy){
-              const dir=ax<cx?-1:1;
-              a.x+=dir*ox*0.5; c.x-=dir*ox*0.5;
-              const av=a.vx, cv=c.vx;
-              a.vx=av*0.8+cv*0.2; c.vx=cv*0.8+av*0.2;
-            }else{
-              const dir=ay<cy?-1:1;
-              a.y+=dir*oy*0.5; c.y-=dir*oy*0.5;
-              const av=a.vy, cv=c.vy;
-              a.vy=av*0.8+cv*0.2; c.vy=cv*0.8+av*0.2;
+          let dx=(a.x+a.w*0.5)-(c.x+c.w*0.5);
+          let dy=(a.y+a.h*0.5)-(c.y+c.h*0.5);
+          let dist=Math.hypot(dx,dy);
+          const min=a.rad+c.rad;
+          if(dist<0.0001){ dx=1; dy=0; dist=1; }
+          if(dist<min){
+            const nx=dx/dist, ny=dy/dist;
+            const overlap=min-dist;
+            a.x+=nx*overlap*0.5;
+            a.y+=ny*overlap*0.5;
+            c.x-=nx*overlap*0.5;
+            c.y-=ny*overlap*0.5;
+            const rv=(a.vx-c.vx)*nx+(a.vy-c.vy)*ny;
+            if(rv<0){
+              const imp=rv*0.55;
+              a.vx-=imp*nx; a.vy-=imp*ny;
+              c.vx+=imp*nx; c.vy+=imp*ny;
             }
-            a.x=Math.max(0,Math.min(W-a.w,a.x));
-            c.x=Math.max(0,Math.min(W-c.w,c.x));
-            a.y=Math.max(0,Math.min(H-a.h,a.y));
-            c.y=Math.max(0,Math.min(H-c.h,c.y));
+            clampCircle(a);
+            clampCircle(c);
           }
         }
       }
     }
     for(let i=0;i<live.length;i++){
       const b=live[i];
-      let supported=b.y>=H-b.h-1.5;
-      if(!supported){
-        for(let j=0;j<live.length;j++){
-          if(i===j) continue;
-          const o=live[j];
-          const ox=(b.w+o.w)*0.5-Math.abs((b.x+b.w*0.5)-(o.x+o.w*0.5));
-          if(ox>1 && o.y>b.y && (b.y+b.h)>=o.y-2){ supported=true; break; }
-        }
+      clampCircle(b);
+      const cy=b.y+b.h*0.5;
+      const onFloor=cy+b.rad>=H-0.8;
+      let overlapping=false;
+      for(let j=0;j<live.length;j++){
+        if(i===j) continue;
+        const o=live[j];
+        const dx=(b.x+b.w*0.5)-(o.x+o.w*0.5);
+        const dy=(b.y+b.h*0.5)-(o.y+o.h*0.5);
+        if(Math.hypot(dx,dy)<b.rad+o.rad-0.6){ overlapping=true; break; }
       }
-      if(supported && Math.abs(b.vy)<40){
+      if(!overlapping && onFloor && Math.abs(b.vy)<40){
         b.vy=0;
         b.vx*=0.85;
         if(Math.abs(b.vx)<8) b.vx=0;
