@@ -1508,7 +1508,7 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;inset:0;wi
   height:40px;padding:0 14px;border-radius:999px;border:0;cursor:pointer;
   background:rgba(255,255,255,.94);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.5),0 10px 28px -12px rgba(0,0,0,.55);
+  box-shadow:inset 0 0 0 0.5px rgba(31,28,26,.10),0 10px 28px -12px rgba(0,0,0,.45);
   color:#1f1c1a;font:500 13px/1 var(--ds-font);
   transition:transform .42s cubic-bezier(.34,1.45,.64,1),box-shadow .3s ease,background .25s ease,color .25s ease,opacity .25s ease;
 }
@@ -1595,18 +1595,29 @@ body.is-sheet .mail-fab{
   opacity:0;pointer-events:none;transform:translateY(8px);
 }
 @media (max-width:800px){
-  .mail-fab{right:12px;bottom:calc(12px + var(--vv-bottom, 0px))}
+  .mail-fab{right:12px;bottom:calc(18px + var(--vv-bottom, 0px));overflow:visible}
   .mail-panel{
-    width:min(320px, calc(100vw - 24px));
-    max-width:calc(100vw - 24px);
-    padding:14px;
+    position:fixed;
+    left:12px;right:12px;width:auto;
+    top:max(12px, env(safe-area-inset-top, 0px));
+    bottom:auto;
+    padding:22px 18px 20px;
+    transform-origin:top center;
   }
-  .mail-copy{font-size:13px;line-height:1.4}
-  .mail-input{height:44px;font-size:16px}
-  .mail-go{height:44px;padding:0 14px}
+  .mail-copy{font-size:14px;line-height:1.45;margin:0 0 14px}
+  .mail-input{height:48px;font-size:16px}
+  .mail-go{height:48px;padding:0 16px}
+  html.is-mail-open .chrome-fab,
+  html.is-mail-open .mail-chip{
+    opacity:0;pointer-events:none;
+  }
+  html.is-keyboard .chrome-fab,
+  html.is-keyboard .mail-chip{
+    opacity:0;pointer-events:none;
+  }
 }
 @media (hover:hover) and (pointer:fine){
-  .mail-chip:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.55),0 14px 32px -12px rgba(0,0,0,.6)}
+  .mail-chip:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 0.5px rgba(31,28,26,.12),0 14px 32px -12px rgba(0,0,0,.5)}
   .mail-chip.is-on:hover{transform:none;box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.4),0 6px 16px -12px rgba(0,0,0,.4)}
   .mail-go:hover{transform:translateY(-1px)}
   .mail-go:disabled:hover{transform:none}
@@ -1628,12 +1639,12 @@ body.is-sheet .mail-fab{
   display:grid;place-items:center;
   background:rgba(255,255,255,.94);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.5),0 10px 28px -12px rgba(0,0,0,.55);
+  box-shadow:inset 0 0 0 0.5px rgba(31,28,26,.10),0 10px 28px -12px rgba(0,0,0,.45);
   color:#1f1c1a;
   transition:transform .42s cubic-bezier(.34,1.45,.64,1),box-shadow .3s ease;
 }
 @media (hover:hover) and (pointer:fine){
-.density-btn:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.55),0 14px 32px -12px rgba(0,0,0,.6)}
+.density-btn:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 0.5px rgba(31,28,26,.12),0 14px 32px -12px rgba(0,0,0,.5)}
 }
 .density-btn:active{transform:scale(.94)}
 .density-btn:focus-visible{outline:2px solid var(--ds-accent);outline-offset:3px}
@@ -1731,7 +1742,8 @@ body.is-sheet .mail-fab{
     left:12px;right:12px;top:auto;
     bottom:calc(12px + var(--vv-bottom, 0px));
     width:auto;
-    height:auto;
+    height:calc(100svh - 24px);
+    min-height:calc(100svh - 24px);
     max-height:calc(100svh - 24px);
     border-radius:20px;
     border:0.5px solid var(--line);
@@ -1777,7 +1789,8 @@ body.is-sheet .mail-fab{
   }
   .chrome-fab{
     left:12px;right:auto;
-    bottom:calc(12px + var(--vv-bottom, 0px));
+    bottom:calc(18px + var(--vv-bottom, 0px));
+    overflow:visible;
     justify-content:flex-start;
     z-index:30;
     transition:opacity .28s ease,transform .34s cubic-bezier(.22,1,.36,1);
@@ -1807,11 +1820,11 @@ body.is-sheet .mail-fab{
   height:40px;padding:0 8px 0 10px;border-radius:999px;border:0;cursor:pointer;
   background:rgba(255,255,255,.94);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.5),0 10px 28px -12px rgba(0,0,0,.55);
+  box-shadow:inset 0 0 0 0.5px rgba(31,28,26,.10),0 10px 28px -12px rgba(0,0,0,.45);
   color:#1f1c1a;font:500 13px/1 var(--ds-font);
   transition:transform .42s cubic-bezier(.34,1.45,.64,1),box-shadow .3s ease,background .25s ease;
 }
-.accent-chip:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 0.5px rgba(255,255,255,.55),0 14px 32px -12px rgba(0,0,0,.6)}
+.accent-chip:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 0.5px rgba(31,28,26,.12),0 14px 32px -12px rgba(0,0,0,.5)}
 .accent-chip:active{transform:scale(.97)}
 .accent-chip:focus-visible{outline:2px solid var(--ds-accent);outline-offset:3px}
 .accent-chip-dot{
@@ -4497,7 +4510,9 @@ window.vrSound=(function(){
     const vv=window.visualViewport;
     if(!vv){ root.style.setProperty("--vv-bottom","0px"); return; }
     const gap=Math.max(0, window.innerHeight - vv.offsetTop - vv.height);
-    root.style.setProperty("--vv-bottom", gap+"px");
+    const keyboard=gap>140;
+    root.style.setProperty("--vv-bottom", (keyboard?0:Math.min(gap,64))+"px");
+    root.classList.toggle("is-keyboard", keyboard);
   }
   set();
   if(window.visualViewport){
@@ -4714,6 +4729,7 @@ window.vrSound=(function(){
     fab.classList.add("is-open");
     chip.classList.add("is-open");
     chip.setAttribute("aria-expanded","true");
+    document.documentElement.classList.add("is-mail-open");
     if(window.vrSound) vrSound.open();
   }
   function close(){
@@ -4872,6 +4888,7 @@ window.vrSound=(function(){
     fab.classList.remove("is-open");
     chip.classList.remove("is-open");
     chip.setAttribute("aria-expanded","false");
+    document.documentElement.classList.remove("is-mail-open");
     if(was && window.vrSound) vrSound.close();
   }
   function open(){
@@ -4879,6 +4896,7 @@ window.vrSound=(function(){
     fab.classList.add("is-open");
     chip.classList.add("is-open");
     chip.setAttribute("aria-expanded","true");
+    document.documentElement.classList.add("is-mail-open");
     if(window.vrSound) vrSound.open();
     const input=document.getElementById("mailEmail");
     const coarse=window.matchMedia("(pointer:coarse)").matches;
@@ -4893,6 +4911,7 @@ window.vrSound=(function(){
     chip.setAttribute("aria-expanded","false");
     fab.classList.remove("is-open");
     chip.classList.remove("is-open");
+    document.documentElement.classList.remove("is-mail-open");
     hideMailAsk();
   }
   function applyOnState(){
