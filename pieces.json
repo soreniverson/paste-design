@@ -56,8 +56,8 @@
   },
   "day-12": {
     "day": "Day 12",
-    "title": "Honk",
-    "desc": "Poke the goose. It has thoughts."
+    "title": "Tooltip",
+    "desc": "A tooltip. Then that tooltip's tooltip."
   },
   "day-13": {
     "day": "Day 13",
