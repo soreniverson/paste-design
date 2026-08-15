@@ -901,17 +901,17 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
   position:relative;width:280px;height:240px;
   font-family:var(--ds-font);
   user-select:none;touch-action:manipulation;
+  overflow:visible;
 }
 .ds-tip-host{
-  position:absolute;left:50%;bottom:22px;
+  position:absolute;left:50%;bottom:28px;
   transform:translateX(-50%);
-  margin:0;padding:0;border:0;background:transparent;
-  color:var(--ds-ink,#1f1c1a);
+  color:var(--ds-muted);
   font:500 13px/1.2 var(--ds-font);
-  letter-spacing:-.01em;
+  letter-spacing:inherit;
   border-bottom:1px dotted currentColor;
-  opacity:.55;
-  cursor:help;
+  white-space:nowrap;
+  pointer-events:none;
 }
 .ds-tip-b{
   display:inline-block;
@@ -931,14 +931,15 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
 .ds-tip-b:focus{outline:none}
 .ds-tip-b:focus-visible{outline:2px solid var(--ds-accent);outline-offset:3px}
 .ds-tip-caret{
-  position:absolute;left:50%;bottom:-3.5px;
+  position:absolute;
+  left:50%;bottom:-3.5px;
   width:7px;height:7px;margin-left:-3.5px;
   background:#1f1c1a;border-radius:.5px;
   transform:rotate(45deg);
-  pointer-events:none;
+  pointer-events:none;font-style:normal;
 }
 .ds-tip-b[data-i="1"]{
-  position:absolute;left:50%;bottom:42px;
+  position:absolute;left:50%;bottom:52px;
   transform:translateX(-50%);
   z-index:1;
 }
@@ -947,7 +948,7 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
   bottom:calc(100% + 6px);
   z-index:2;
   opacity:0;
-  transform:translateY(6px) scale(.9);
+  transform:translateY(8px) scale(.88);
   pointer-events:none;
 }
 .ds-tip-b > .ds-tip-b::after{
@@ -955,14 +956,14 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
   position:absolute;left:10%;right:10%;
   top:100%;height:8px;
 }
-.ds-tip-b[data-i="2"]{left:18px}
-.ds-tip-b[data-i="3"]{left:auto;right:18px}
+.ds-tip-b[data-i="2"],
 .ds-tip-b[data-i="4"]{left:18px}
-.ds-tip-b[data-i="5"]{left:auto;right:18px}
-.ds-tip-b[data-i="2"] > .ds-tip-caret{left:22%;margin-left:0}
-.ds-tip-b[data-i="3"] > .ds-tip-caret{left:auto;right:22%;margin-left:0}
-.ds-tip-b[data-i="4"] > .ds-tip-caret{left:22%;margin-left:0}
-.ds-tip-b[data-i="5"] > .ds-tip-caret{left:auto;right:22%;margin-left:0}
+.ds-tip-b[data-i="3"],
+.ds-tip-b[data-i="5"]{right:18px;left:auto}
+.ds-tip-b[data-i="2"] > .ds-tip-caret,
+.ds-tip-b[data-i="4"] > .ds-tip-caret{left:18px;margin-left:-3.5px}
+.ds-tip-b[data-i="3"] > .ds-tip-caret,
+.ds-tip-b[data-i="5"] > .ds-tip-caret{left:auto;right:18px;margin-left:0;margin-right:-3.5px}
 .ds-tip:is([data-n="2"],[data-n="3"],[data-n="4"],[data-n="5"]) .ds-tip-b[data-i="2"],
 .ds-tip:is([data-n="3"],[data-n="4"],[data-n="5"]) .ds-tip-b[data-i="3"],
 .ds-tip:is([data-n="4"],[data-n="5"]) .ds-tip-b[data-i="4"],
@@ -976,20 +977,20 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
 }
 @keyframes tipNudge{
   0%{transform:translateY(0) scale(1)}
-  40%{transform:translateY(-3px) scale(1.06)}
+  40%{transform:translateY(-3px) scale(1.07)}
   100%{transform:translateY(0) scale(1)}
 }
 .tile-preview .ds-tip{
   pointer-events:none;
-  transform:scale(.78);
-  transform-origin:center 72%;
+  width:168px;height:124px;
 }
+.tile-preview .ds-tip-host{bottom:16px}
+.tile-preview .ds-tip-b[data-i="1"]{bottom:38px}
 .tile-preview:has(.ds-tip){place-items:center}
 @media (prefers-reduced-motion:reduce){
   .ds-tip-b{transition:none!important}
   .ds-tip.is-max .ds-tip-b[data-i="5"]{animation:none!important}
 }
-
 
 /* Day 16 drop zone — one card, idle↔filled morph */
 .ds-drop{
@@ -2401,7 +2402,7 @@ const pieces=[
 {id:"day-15",day:"Day 15",title:"Weekly pulse",desc:"Bars spring in. Hover a day to read the pulse.",ready:true,code:"<!-- Weekly pulse -->\n<div class=\"ds-pulse is-in is-active has-sel\">\n  <div class=\"ds-pulse-top\">\n    <div class=\"ds-pulse-readout\"><span class=\"ds-pulse-value\">48</span></div>\n  </div>\n  <div class=\"ds-pulse-well\"><div class=\"ds-pulse-chart\">\n    <span class=\"ds-pulse-bar\" style=\"--h:46%;display:inline-block;width:26px;height:46%;border-radius:999px;background:rgba(0,0,0,.08)\"></span>\n  </div></div>\n</div>\n<style>\n.ds-pulse{font-family:Geist,system-ui,sans-serif;width:min(292px,100%)}\n.ds-pulse-value{font:600 26px Geist,system-ui,sans-serif;color:var(--ds-accent,#2e6b5c);font-variant-numeric:tabular-nums}\n.ds-pulse-bar{border-radius:999px;background:var(--ds-accent,#2e6b5c)}\n</style>",prompt:"Build a Weekly pulse chart. Spec: Geist, --ds-accent. Header: This week + selected day name + tabular visits readout with digit reel on change. Soft well behind seven pill bars (Mon-Sun). Bars spring from scaleY(0) with stagger (~50ms) using cubic-bezier(.34,1.45,.64,1). Hairline baseline. Selecting a day (hover/focus/click): accent fill, slight lift, day label accents, siblings quiet down, readout reels to that value. Default peak day. Quiet focus outline on bar. No hint. Acceptance: keyboard operable; reduced-motion skips stagger/reel."},
 {id:"day-14",day:"Day 14",title:"Copy link",desc:"One click. Link copied. Check springs in.",ready:true,code:"<!-- Copy link -->\n<div class=\"ds-copy\">\n  <button class=\"ds-copy-btn\" type=\"button\">\n    <span class=\"ds-copy-label\">\n      <span class=\"ds-copy-idle\"><i class=\"ti ti-link\"></i><span>Copy link</span></span>\n      <span class=\"ds-copy-done\"><i class=\"ti ti-check\"></i><span>Copied</span></span>\n    </span>\n  </button>\n</div>\n<style>\n.ds-copy{display:flex;flex-direction:column;align-items:center;gap:14px;font-family:Geist,system-ui,sans-serif}\n.ds-copy-btn{border:0;cursor:pointer;height:48px;min-width:168px;padding:0 22px;border-radius:12px;background:#fff;color:#1f1c1a;font:600 14px Geist,system-ui,sans-serif;box-shadow:inset 0 0 0 0.5px rgba(0,0,0,.06);display:inline-flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:transform .42s cubic-bezier(.34,1.45,.64,1),background .28s,color .22s}\n.ds-copy-label{display:grid;place-items:center}\n.ds-copy-label>span{grid-area:1/1;display:inline-flex;align-items:center;gap:8px;transition:opacity .28s,transform .42s cubic-bezier(.34,1.45,.64,1)}\n.ds-copy-done{opacity:0;transform:translateY(8px)}\n.ds-copy-btn.is-done{background:var(--ds-accent,#2e6b5c);color:#fff;transform:scale(1.04)}\n.ds-copy-btn.is-done .ds-copy-idle{opacity:0;transform:translateY(-8px)}\n.ds-copy-btn.is-done .ds-copy-done{opacity:1;transform:none}\n.ds-copy-url{margin:0;font:500 12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#6b6661}\n</style>",prompt:"Build a Copy link button. Spec: Geist 600 14px, 48px tall, 12px radius, white surface idle with hairline border. Label stacks Copy link (link icon) and Copied (check) in one grid cell. On click: soft press, spring success to accent fill, idle exits up while Copied + check spring in, quiet mono URL under the button flashes accent. Reset after ~1.8s. Uses --ds-accent tokens. Acceptance: no layout jump; works if clipboard API fails (still shows Copied); reduced-motion skips spring; focus visible."},
 {id:"day-13",day:"Day 13",title:"Slide to unlock",desc:"Slide to commit. Early release springs home.",ready:true,code:"<!-- Slide to unlock -->\n<div class=\"ds-unlock\">\n  <div class=\"ds-unlock-track\">\n    <div class=\"ds-unlock-fill\"></div>\n    <div class=\"ds-unlock-label\"><span>Slide to unlock</span><i class=\"ti ti-chevron-right\"></i></div>\n    <button class=\"ds-unlock-thumb\" type=\"button\" aria-label=\"Slide to unlock\"><i class=\"ti ti-lock\"></i></button>\n  </div>\n</div>\n<style>\n.ds-unlock{width:min(280px,100%);font-family:Geist,system-ui,sans-serif}\n.ds-unlock-track{position:relative;height:56px;border-radius:999px;background:rgba(0,0,0,.06);overflow:hidden}\n.ds-unlock-fill{position:absolute;inset:0 auto 0 0;width:0;background:color-mix(in srgb,var(--ds-accent,#2e6b5c) 14%,transparent);border-radius:999px}\n.ds-unlock-thumb{position:absolute;top:4px;left:4px;width:48px;height:48px;border:0;border-radius:50%;background:#fff;cursor:grab;box-shadow:0 8px 18px -8px rgba(0,0,0,.28)}\n.ds-unlock.is-unlocked .ds-unlock-fill{width:100%;background:var(--ds-accent,#2e6b5c)}\n.ds-unlock.is-unlocked .ds-unlock-thumb{background:transparent;color:#fff;box-shadow:none}\n</style>",prompt:"Build a slide-to-unlock control. Spec: ~56px pill track, lock thumb on the left, center label Slide to unlock with a soft chevron pulse. Drag right; fill follows softly. Past ~85%: armed (Release to unlock) with status reel. Early release: spring snap-back home. Commit: track fills accent, stacked lock→check spring, status Unlocked, auto-reset ~2s. Quiet focus hairline (no sage glow ring). No instructional hint. Geist, --ds-accent, Tabler. Acceptance: continuous drag; cancel vs commit obvious; pointer capture; reduced-motion skips jelly/reel."},
-{id:"day-12",day:"Day 12",title:"Tooltip",desc:"A tooltip. Then that tooltip's tooltip.",ready:true,code:"<!-- Tooltip -->\n<div class=\"ds-tip\" data-n=\"2\">\n  <span class=\"ds-tip-host\">this</span>\n  <button class=\"ds-tip-b\" type=\"button\" data-i=\"1\">Tooltip<i class=\"ds-tip-caret\"></i>\n    <span class=\"ds-tip-b\" data-i=\"2\">Tooltip<i class=\"ds-tip-caret\"></i></span>\n  </button>\n</div>\n<style>\n.ds-tip{font-family:Geist,system-ui,sans-serif;position:relative;width:260px;height:220px}\n.ds-tip-host{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font:500 13px/1.2 Geist,system-ui,sans-serif;border-bottom:1px dotted currentColor;opacity:.55}\n.ds-tip-b{background:#1f1c1a;color:#fff;padding:6px 9px;border-radius:7px;font:500 12px/1.25 Geist,system-ui,sans-serif;box-shadow:0 8px 20px -10px rgba(0,0,0,.5),inset 0 .5px 0 rgba(255,255,255,.12)}\n.ds-tip-b[data-i=\"1\"]{position:absolute;left:50%;bottom:38px;transform:translateX(-50%)}\n.ds-tip-b>.ds-tip-b{position:absolute;bottom:calc(100% + 10px);left:58%}\n.ds-tip-caret{position:absolute;bottom:-3px;left:50%;width:6.5px;height:6.5px;background:#1f1c1a;border-radius:.5px;transform:rotate(45deg)}\n</style>",prompt:"Build a tooltip that has its own tooltip. Spec: Geist / var(--ds-font), 500 12px/1.25. Dark OS tooltip chrome (#1f1c1a, white type, 7px radius, 6px 9px padding, soft shadow, 6.5px rotated-square caret). Nested DOM: each next tip lives inside the previous one. A dotted this sits under the first caret so the root tip is not floating. No trigger, no question mark, no helper text. Hover a visible tip (not the empty stage) to grow its tooltip. Hold or tap stacks more in a zigzag, each caret aimed at its parent, up to 5. Release keeps the stack. Leave or tap empty stage collapses with a reverse stagger (~75ms). Keyboard Space/Enter holds. Reduced-motion skips stagger/overshoot. Accent only on the focus ring. Acceptance: the tooltip is the trigger; carets point at the parent; collapse is staggered not a snap; no helper copy."},
+{id:"day-12",day:"Day 12",title:"Tooltip",desc:"A tooltip. Then that tooltip's tooltip.",ready:true,code:"<!-- Tooltip -->\n<div class=\"ds-tip\" data-n=\"2\">\n  <span class=\"ds-tip-host\">this</span>\n  <button class=\"ds-tip-b\" type=\"button\" data-i=\"1\">Tooltip<i class=\"ds-tip-caret\"></i>\n    <span class=\"ds-tip-b\" data-i=\"2\">Tooltip<i class=\"ds-tip-caret\"></i></span>\n  </button>\n</div>\n<style>\n.ds-tip{font-family:Geist,system-ui,sans-serif;position:relative;width:280px;height:240px;overflow:visible}\n.ds-tip-host{position:absolute;left:50%;bottom:28px;color:#6b6661;font:500 13px/1.2 Geist,system-ui,sans-serif;letter-spacing:inherit;border-bottom:1px dotted currentColor}\n.ds-tip-b{background:#1f1c1a;color:#fff;padding:7px 10px;border-radius:6px;font:500 13px/1.2 Geist,system-ui,sans-serif;overflow:visible;box-shadow:0 8px 20px -10px rgba(0,0,0,.5),inset 0 .5px 0 rgba(255,255,255,.12)}\n.ds-tip-b[data-i=\"1\"]{position:absolute;left:50%;bottom:52px;transform:translateX(-50%)}\n.ds-tip-b>.ds-tip-b{position:absolute;bottom:calc(100% + 6px);left:18px}\n.ds-tip-caret{position:absolute;bottom:-3.5px;left:50%;width:7px;height:7px;background:#1f1c1a;transform:rotate(45deg)}\n</style>",prompt:"Build a tooltip that has its own tooltip. Spec: Geist / var(--ds-font), 500 13px/1.2. Dark OS tooltip chrome (#1f1c1a, white type, 6px radius, 7px 10px padding, soft shadow, 7px rotated-square caret on the bottom edge). Nested DOM: each next tip lives inside the previous one. A dotted-underline host word this (muted ink, 13px, letter-spacing inherit, no helper copy) sits under the first caret so the root tip points at a word. No question mark, no instructional copy. Hover a visible tip (not the empty stage) to grow its tooltip. Hold or tap stacks more in a tight zigzag (6px gap, ~18px alternate offset), each caret aimed at its parent, up to 5. Every bubble says Tooltip. Release keeps the stack. Leave or tap empty stage collapses with a reverse stagger (~75ms). Keyboard Space/Enter holds. Reduced-motion skips stagger/overshoot. Accent only on the focus ring. Acceptance: the tooltip is the trigger; the root caret points at this; carets point at the parent; collapse is staggered not a snap; no helper copy."},
 {id:"day-11",day:"Day 11",title:"OTP input",desc:"Four cells. Type, paste, or backspace through.",ready:true,code:"<!-- OTP input -->\n<div class=\"ds-otp\">\n  <div class=\"ds-otp-row\">\n    <input class=\"ds-otp-cell\" maxlength=\"1\" inputmode=\"numeric\" value=\"4\" />\n    <input class=\"ds-otp-cell\" maxlength=\"1\" inputmode=\"numeric\" value=\"8\" />\n    <input class=\"ds-otp-cell\" maxlength=\"1\" inputmode=\"numeric\" value=\"2\" />\n    <input class=\"ds-otp-cell\" maxlength=\"1\" inputmode=\"numeric\" />\n  </div>\n</div>\n<style>\n.ds-otp-row{display:flex;gap:10px}\n.ds-otp-cell{width:48px;height:56px;border:0;border-radius:12px;background:#fff;text-align:center;font:600 22px Geist,system-ui,sans-serif;box-shadow:inset 0 0 0 0.5px rgba(0,0,0,.06);outline:0;transition:transform .34s cubic-bezier(.34,1.45,.64,1),box-shadow .25s}\n.ds-otp-cell:focus{transform:scale(1.03);box-shadow:inset 0 0 0 1px rgba(31,28,26,.22),0 2px 10px -4px rgba(31,28,26,.16)}\n</style>",prompt:"Build a 4-digit OTP input. Spec: Geist Sans, accent via CSS variable --ds-accent (default #2e6b5c), 48x56 cells, 12px radius, hairline borders. Auto-advance on digit entry, Backspace moves to previous, paste of 4 digits fills all cells. Focused cell scales slightly with a quiet ink hairline (no glow). Filled cells stay white like empty; the digit is the signal. Acceptance: keyboard only works; paste works; no layout jump."},
 {id:"day-10",day:"Day 10",title:"Clear input",desc:"Clear arrives softly. Clearing exhales the field.",ready:true,code:"<!-- Clear input -->\n<div class=\"ds-clear\">\n  <div class=\"ds-clear-field\">\n    <input class=\"ds-clear-input\" type=\"text\" placeholder=\"Email\" />\n    <button class=\"ds-clear-btn\" type=\"button\" aria-label=\"Clear\"><i class=\"ti ti-x\" aria-hidden=\"true\"></i></button>\n  </div>\n</div>\n<style>\n.ds-clear{position:relative;width:min(320px,100%)}\n.ds-clear-field{display:flex;align-items:center;height:48px;background:#fff;border:0.5px solid rgba(0,0,0,.06);border-radius:12px;box-shadow:0 1px 2px rgba(31,28,26,.04)}\n.ds-clear-input{flex:1;height:100%;border:0;background:0;padding:0 44px 0 16px;font:500 14px Geist,system-ui,sans-serif;outline:0}\n.ds-clear-input::placeholder{color:#b0aaa3;font-weight:400}\n.ds-clear-btn{position:absolute;right:6px;top:50%;width:32px;height:32px;border:0;border-radius:8px;background:0;color:#6b6661;display:grid;place-items:center;opacity:0;pointer-events:none;transform:translateY(-50%) scale(.85);transition:opacity .22s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.34,1.45,.64,1)}\n.ds-clear.has-value .ds-clear-btn{opacity:1;pointer-events:auto;transform:translateY(-50%) scale(1)}\n</style>",prompt:"Build a text input with a clear control. Spec: Geist Sans, sage accent #2e6b5c, hairline border rgba(0,0,0,.06), 48px field height, 12px radius. Clear (x) sits inside the field on the right. When empty, the clear control is invisible (opacity 0, scaled slightly down, no pointer events). When there is text, it fades and springs to full scale. Clicking clear empties the field and refocuses the input. Selected state is a quieter hairline and slight lift (no accent glow ring). Acceptance: no layout jump when the clear button appears; works with mouse and keyboard."},
 {id:"day-09",day:"Day 9",title:"Snap slider",desc:"Drag free. Release and it springs to the tick.",ready:true,code:"<!-- Snap slider -->\n<div class=\"ds-slider\">\n  <div class=\"ds-slider-top\"><span class=\"ds-slider-label\">Intensity</span><span class=\"ds-slider-value\">50</span></div>\n  <div class=\"ds-slider-track\">\n    <div class=\"ds-slider-rail\"><div class=\"ds-slider-fill\" style=\"width:50%\"></div></div>\n    <div class=\"ds-slider-ticks\" aria-hidden=\"true\"><span class=\"ds-slider-tick\" style=\"left:0%\"></span><span class=\"ds-slider-tick\" style=\"left:25%\"></span><span class=\"ds-slider-tick is-active\" style=\"left:50%\"></span><span class=\"ds-slider-tick\" style=\"left:75%\"></span><span class=\"ds-slider-tick\" style=\"left:100%\"></span></div>\n    <div class=\"ds-slider-thumb\" style=\"left:50%\"></div>\n  </div>\n  <div class=\"ds-slider-marks\" aria-hidden=\"true\"><span class=\"ds-slider-mark\" style=\"left:0%\">0</span><span class=\"ds-slider-mark\" style=\"left:25%\">25</span><span class=\"ds-slider-mark is-active\" style=\"left:50%\">50</span><span class=\"ds-slider-mark\" style=\"left:75%\">75</span><span class=\"ds-slider-mark\" style=\"left:100%\">100</span></div>\n</div>\n<style>\n.ds-slider{display:flex;flex-direction:column;gap:14px;width:min(280px,100%);font-family:Geist,system-ui,sans-serif}\n.ds-slider-top{display:flex;justify-content:space-between;align-items:center}\n.ds-slider-label{font:500 13px Geist,system-ui,sans-serif;color:#6b6661}\n.ds-slider-value{font:600 22px/1 Geist,system-ui,sans-serif;font-variant-numeric:tabular-nums}\n.ds-slider-track{position:relative;height:36px;display:flex;align-items:center;margin:0 11px}\n.ds-slider-rail{position:absolute;left:0;right:0;height:3px;border-radius:999px;background:rgba(0,0,0,.08)}\n.ds-slider-fill{height:100%;width:50%;border-radius:999px;background:var(--ds-accent,#2e6b5c);transition:width .55s cubic-bezier(.34,1.45,.64,1)}\n.ds-slider-ticks{position:absolute;left:0;right:0;top:50%;height:0}\n.ds-slider-tick{position:absolute;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:rgba(0,0,0,.14)}\n.ds-slider-tick.is-active{background:var(--ds-accent,#2e6b5c);transform:scale(1.35)}\n.ds-slider-thumb{position:absolute;top:50%;left:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:#fff;box-shadow:0 4px 12px -3px color-mix(in srgb,var(--ds-accent,#2e6b5c) 38%,transparent);transition:left .55s cubic-bezier(.34,1.45,.64,1)}\n.ds-slider-marks{position:relative;height:14px;margin:0 11px}\n.ds-slider-mark{position:absolute;top:0;transform:translateX(-50%);font:500 11px Geist,system-ui,sans-serif;color:#a39e97;font-variant-numeric:tabular-nums}\n.ds-slider-mark.is-active{color:var(--ds-accent,#2e6b5c)}\n</style>",prompt:"Build a snap slider labeled Intensity from 0 to 100 in steps of 25. Spec: Geist, --ds-accent tokens (no hardcoded sage). Drag free along the track; fill and thumb follow live. Near ticks soft-highlight while dragging. On release, thumb/fill spring-settle to the nearest tick (cubic-bezier .34,1.45,.64,1) with a value digit reel and active tick pulse. White thumb with accent glow; rail thickens while dragging. Keyboard arrows/Home/End. Acceptance: free drag then soft snap; accent-aware; reduced-motion skips reel/spring."},
@@ -3509,7 +3510,6 @@ function wireScrub(root){
   if(!wrap) return;
   let n=1, hold=false, over=false, loop=0, leaveTimer=0, collapseTimer=0;
   function tipOf(el){
-    if(el && el.closest && el.closest(".ds-tip-host")) return wrap.querySelector(".ds-tip-b[data-i=\"1\"]");
     const t=el && el.closest ? el.closest(".ds-tip-b") : null;
     return (t && wrap.contains(t)) ? t : null;
   }
