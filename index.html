@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#ffffff" />
+<meta name="color-scheme" content="light" />
 <title>Visual Repository</title>
 <meta name="description" content="Polished UI details, one piece at a time." />
 <meta property="og:type" content="website" />
@@ -474,10 +476,10 @@
   --label:#d8d8d8;
   --label-t:#6a6a6a;
 }
-*{box-sizing:border-box}html,body{height:100%;margin:0}
+*{box-sizing:border-box}html,html,body{height:100%;margin:0;background:var(--ds-surface);overscroll-behavior:none}
 html,body,button,input,textarea,select{font-family:var(--ds-font)}
-body{background:var(--ds-surface);color:var(--ink);-webkit-font-smoothing:antialiased;overflow:auto}
-body.is-sheet{overflow:hidden;overscroll-behavior:none}
+body{color:var(--ink);-webkit-font-smoothing:antialiased;overflow:auto}
+body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;inset:0;width:100%}
 .shell{min-height:100%;min-height:100dvh;display:block;padding:0}
 .gallery{width:100%;min-height:100%;min-height:100dvh;background:var(--ds-surface);border-radius:0;overflow:visible;display:grid;grid-template-columns:1fr;grid-auto-rows:minmax(200px,auto);position:relative}
 .tile{appearance:none;border:0;box-shadow:inset 0 0 0 0.5px var(--ds-line);background:var(--ds-surface);margin:0;padding:0;cursor:pointer;display:block;transition:opacity .32s var(--ease),filter .32s var(--ease);position:relative;z-index:1;min-height:200px}
@@ -1696,9 +1698,16 @@ body.is-sheet .mail-fab{
 
 /* Mobile UX pass (after density so it wins) */
 @media (max-width:800px){
-  .tile-name{opacity:1;transform:none}
+  .gallery{
+    padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));
+  }
+  .tile-inner{padding:20px 16px 56px}
+  .tile-name{
+    opacity:1;transform:none;
+    left:16px;right:16px;bottom:16px;
+    max-width:none;
+  }
   .tile:focus-visible .tile-name{opacity:1;transform:none}
-  .tile-name{bottom:calc(14px + 52px + env(safe-area-inset-bottom,0px))}
   .gallery[data-density="4"]{
     grid-template-columns:1fr!important;
     grid-auto-rows:minmax(46dvh,auto)!important;
@@ -1722,17 +1731,19 @@ body.is-sheet .mail-fab{
     border-top:0.5px solid var(--line);
     box-shadow:0 -18px 48px -20px rgba(0,0,0,.35);
     transform:translateY(calc(100% + 24px));
-    padding-bottom:env(safe-area-inset-bottom);
+    padding-bottom:0;
+    background:var(--ds-stage);
     z-index:20;
   }
   .gallery.is-open .detail{transform:translateY(0)}
   .detail-head{
-    display:grid;
-    grid-template-columns:1fr auto;
-    align-items:start;
-    padding:20px 12px 8px 16px;
-    gap:6px 8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 10px 10px 16px;
+    gap:8px;
     position:relative;
+    background:var(--ds-surface);
   }
   .detail-head::before{
     content:"";
@@ -1741,19 +1752,22 @@ body.is-sheet .mail-fab{
     width:36px;height:4px;border-radius:99px;
     background:color-mix(in srgb,var(--ds-ink) 12%,transparent);
     transform:translateX(-50%);
+    pointer-events:none;
   }
-  .detail-head-text{grid-column:1;grid-row:1;min-width:0}
+  .detail-head-text{min-width:0;flex:1;display:flex;align-items:center}
+  .detail-title{line-height:40px;font-size:17px}
   .detail-actions{
-    grid-column:2;grid-row:1;
     width:auto;flex-wrap:nowrap;gap:0;
     justify-content:flex-end;
+    align-items:center;
   }
-  .copy-code{width:40px;height:40px}
+  .copy-code,.ds-icon-btn{width:40px;height:40px}
   .close,.ds-icon-btn.close{width:40px;height:40px}
   .detail-body{
-    padding:20px 16px 28px;
-    margin:0 10px calc(12px + env(safe-area-inset-bottom));
-    border-radius:12px;
+    padding:20px 16px calc(24px + env(safe-area-inset-bottom,0px));
+    margin:0;
+    border-radius:0;
+    background:var(--ds-stage);
   }
   .chrome-fab{
     left:12px;right:12px;
@@ -2581,9 +2595,12 @@ function layoutSliderFills(scope){
 requestAnimationFrame(()=>layoutSliderFills(gallery));
 window.addEventListener("resize",()=>layoutSliderFills(document));
 window.addEventListener("resize",()=>layoutSegPills(document));
+let sheetScrollY=0;
 function openPiece(p,btn){
+  sheetScrollY=window.scrollY||0;
   gallery.classList.add("is-open");
   document.body.classList.add("is-sheet");
+  document.body.style.top=(-sheetScrollY)+"px";
   if(window.vrSound) vrSound.sheet(true);
   const scrim=document.getElementById("detailScrim"); if(scrim){ scrim.hidden=false; }
   document.querySelectorAll(".tile").forEach(t=>t.classList.toggle("is-active",t===btn));
@@ -2674,6 +2691,8 @@ function closeDetail(){
   const wasOpen=gallery.classList.contains("is-open");
   gallery.classList.remove("is-open");
   document.body.classList.remove("is-sheet");
+  document.body.style.top="";
+  if(wasOpen) window.scrollTo(0, sheetScrollY||0);
   if(wasOpen && window.vrSound) vrSound.sheet(false);
   const scrim=document.getElementById("detailScrim"); if(scrim){ scrim.hidden=true; }
   document.querySelectorAll(".tile").forEach(t=>t.classList.remove("is-active"));
@@ -2692,6 +2711,49 @@ function closeDetail(){
   hideMailAsk();
 }
 closeBtn.addEventListener("click",closeDetail);
+(function initSheetDrag(){
+  const sheet=document.getElementById("detail");
+  const head=sheet && sheet.querySelector(".detail-head");
+  if(!sheet||!head) return;
+  const mq=window.matchMedia("(max-width:800px)");
+  let startY=0, dy=0, dragging=false, pid=null;
+  function mobile(){ return mq.matches && gallery.classList.contains("is-open"); }
+  function reset(){
+    dragging=false; pid=null; dy=0;
+    sheet.style.transition="";
+    sheet.style.transform="";
+  }
+  head.addEventListener("pointerdown",function(e){
+    if(!mobile()) return;
+    if(e.target.closest("button")) return;
+    dragging=true; pid=e.pointerId; startY=e.clientY; dy=0;
+    sheet.style.transition="none";
+    try{ head.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  head.addEventListener("pointermove",function(e){
+    if(!dragging || e.pointerId!==pid) return;
+    dy=Math.max(0, e.clientY-startY);
+    sheet.style.transform="translateY("+dy+"px)";
+  });
+  function end(e){
+    if(!dragging || (e && e.pointerId!==pid)) return;
+    const should=dy>96 || (e && e.velocityY && e.velocityY>0.6);
+    const dist=dy;
+    dragging=false; pid=null;
+    if(should){
+      sheet.style.transition="transform .28s cubic-bezier(.22,1,.36,1)";
+      sheet.style.transform="translateY(110%)";
+      setTimeout(function(){ reset(); closeDetail(); }, 260);
+    }else{
+      sheet.style.transition="transform .32s cubic-bezier(.22,1,.36,1)";
+      sheet.style.transform="translateY(0)";
+      setTimeout(function(){ if(!dragging){ sheet.style.transition=""; sheet.style.transform=""; } }, 320);
+    }
+    dy=0;
+  }
+  head.addEventListener("pointerup", end);
+  head.addEventListener("pointercancel", end);
+})();
 (function(){ const s=document.getElementById("detailScrim"); if(s) s.addEventListener("click",closeDetail); })();
 copyCodeBtn.addEventListener("click",()=>copyText(currentSnippet,copyCodeBtn,"Copy code"));
 copyPromptBtn.addEventListener("click",()=>copyText(currentPrompt,copyPromptBtn,"Copy prompt"));
