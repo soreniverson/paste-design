@@ -1674,27 +1674,26 @@ body.is-sheet .mail-fab{
 }
 .density-icon{
   position:relative;width:16px;height:16px;display:block;
+  background:#fff;
+  filter:blur(1.7px) contrast(18);
 }
 .density-icon i{
-  position:absolute;display:block;background:currentColor;border-radius:2px;
+  position:absolute;display:block;background:#1f1c1a;border-radius:3px;
   opacity:1;
-  transition:inset .42s cubic-bezier(.22,1,.36,1),opacity .28s ease,border-radius .35s ease;
+  transition:inset .58s cubic-bezier(.34,1.45,.64,1),border-radius .5s cubic-bezier(.34,1.45,.64,1);
 }
 /* 4-up */
-.density-btn[data-density="4"] .density-icon i:nth-child(1){inset:0 56% 56% 0}
-.density-btn[data-density="4"] .density-icon i:nth-child(2){inset:0 0 56% 56%}
-.density-btn[data-density="4"] .density-icon i:nth-child(3){inset:56% 56% 0 0}
-.density-btn[data-density="4"] .density-icon i:nth-child(4){inset:56% 0 0 56%}
-/* 2-up */
-.density-btn[data-density="2"] .density-icon i:nth-child(1){inset:0 56% 0 0;border-radius:2.5px}
-.density-btn[data-density="2"] .density-icon i:nth-child(2){inset:0 0 0 56%;border-radius:2.5px}
-.density-btn[data-density="2"] .density-icon i:nth-child(3),
-.density-btn[data-density="2"] .density-icon i:nth-child(4){inset:42% 42% 42% 42%;opacity:0}
-/* 1-up */
-.density-btn[data-density="1"] .density-icon i:nth-child(1){inset:0;border-radius:3px}
-.density-btn[data-density="1"] .density-icon i:nth-child(2),
-.density-btn[data-density="1"] .density-icon i:nth-child(3),
-.density-btn[data-density="1"] .density-icon i:nth-child(4){inset:48% 48% 48% 48%;opacity:0}
+.density-btn[data-density="4"] .density-icon i:nth-child(1){inset:0 54% 54% 0}
+.density-btn[data-density="4"] .density-icon i:nth-child(2){inset:0 0 54% 54%}
+.density-btn[data-density="4"] .density-icon i:nth-child(3){inset:54% 54% 0 0}
+.density-btn[data-density="4"] .density-icon i:nth-child(4){inset:54% 0 0 54%}
+/* 2-up — pairs occupy the same cells so they melt together */
+.density-btn[data-density="2"] .density-icon i:nth-child(1),
+.density-btn[data-density="2"] .density-icon i:nth-child(3){inset:0 54% 0 0;border-radius:3px}
+.density-btn[data-density="2"] .density-icon i:nth-child(2),
+.density-btn[data-density="2"] .density-icon i:nth-child(4){inset:0 0 0 54%;border-radius:3px}
+/* 1-up — all four occupy the same square and fuse */
+.density-btn[data-density="1"] .density-icon i{inset:0;border-radius:3.5px}
 
 /* Gallery density — density wins over breakpoints */
 .gallery[data-density="4"]{
@@ -1724,6 +1723,7 @@ body.is-sheet .mail-fab{
 .gallery .tile.is-flipping{z-index:2;will-change:transform}
 @media (prefers-reduced-motion:reduce){
   .density-btn.is-pop{animation:none}
+  .density-icon{filter:none;background:transparent}
   .density-icon i{transition:none}
 }
 
@@ -1830,6 +1830,23 @@ body.is-sheet .mail-fab{
   body.is-sheet .detail-scrim{display:block;opacity:1;pointer-events:auto}
 }
 .detail-scrim,.detail-scrim[hidden]{display:none}
+.ios-clear{
+  display:none;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  width:100%;
+  height:5px;
+  background-color:rgba(255,255,255,0);
+  pointer-events:none;
+  z-index:50;
+}
+@supports (-webkit-touch-callout: none){
+  @media (max-width:800px){
+    .ios-clear{display:block}
+  }
+}
 /* Accent control */
 .accent-chip{
   display:inline-flex;align-items:center;gap:10px;
@@ -2344,6 +2361,7 @@ body.is-sheet .mail-fab{
 </style>
 </head>
 <body>
+<div class="ios-clear" aria-hidden="true"></div>
 <div class="shell">
 <div class="gallery" id="gallery" aria-label="UI gallery">
 <section class="detail" id="detail">
