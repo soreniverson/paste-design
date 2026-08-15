@@ -1832,8 +1832,8 @@ body.is-sheet .mail-fab{
 .detail-scrim,.detail-scrim[hidden]{display:none}
 /* Accent control */
 .accent-chip{
-  display:inline-flex;align-items:center;gap:8px;
-  height:40px;padding:0 8px 0 10px;border-radius:999px;border:0;cursor:pointer;
+  display:inline-flex;align-items:center;gap:10px;
+  height:40px;padding:0 14px 0 10px;border-radius:999px;border:0;cursor:pointer;
   background:rgba(255,255,255,.94);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   box-shadow:inset 0 0 0 0.5px rgba(31,28,26,.10),0 10px 28px -12px rgba(0,0,0,.45);
@@ -1851,7 +1851,7 @@ body.is-sheet .mail-fab{
 }
 .accent-chip-label{letter-spacing:-.01em}
 .accent-chip-caret{
-  width:14px;height:14px;margin-left:0;opacity:.45;
+  width:14px;height:14px;margin-left:2px;opacity:.45;
   transition:transform .42s cubic-bezier(.34,1.45,.64,1),opacity .2s ease;
 }
 .accent-chip.is-open{background:#fff;box-shadow:inset 0 0 0 0.5px var(--ds-line),0 6px 18px -10px rgba(0,0,0,.35)}
@@ -1859,7 +1859,7 @@ body.is-sheet .mail-fab{
 .accent-panel{
   position:absolute;left:0;bottom:calc(100% + 10px);
   display:flex;flex-direction:column;gap:12px;
-  width:248px;padding:12px;
+  width:248px;padding:12px 18px 12px 12px;
   border-radius:18px;
   background:rgba(255,255,255,.97);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
@@ -1878,7 +1878,7 @@ body.is-sheet .mail-fab{
   font:500 11px/1 var(--ds-font);color:var(--ds-muted);
   letter-spacing:.06em;text-transform:uppercase;padding:0 2px;
 }
-.accent-swatches{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.accent-swatches{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;padding:3px 4px 3px 3px}
 .accent-swatch{
   position:relative;
   width:28px;height:28px;border-radius:50%;border:0;cursor:pointer;padding:0;flex:0 0 auto;
@@ -2366,7 +2366,7 @@ body.is-sheet .mail-fab{
 <button class="accent-chip" type="button" id="accentChip" aria-expanded="false" aria-controls="accentPanel" aria-label="Accent color">
   <span class="accent-chip-dot" id="accentChipDot" aria-hidden="true"></span>
   <span class="accent-chip-label">Accent</span>
-  <i class="ti ti-chevron-up accent-chip-caret" aria-hidden="true"></i>
+  <i class="ti ti-chevron-down accent-chip-caret" aria-hidden="true"></i>
 </button>
 <div class="accent-panel" id="accentPanel" role="dialog" aria-label="Choose accent">
   <div class="accent-swatches" id="accentSwatches"></div>
