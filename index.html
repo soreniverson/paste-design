@@ -896,104 +896,78 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
 .tile-preview .ds-otp-hint{display:none}
 .tile-preview .ds-otp-cell{width:40px;height:46px;font-size:18px}
 
-/* Day 12 Value scrub */
-.ds-scrub{
-  display:inline-flex;flex-direction:column;align-items:center;gap:14px;
-  user-select:none;touch-action:none;
+/* Day 12 Unread */
+.ds-unread{
+  position:relative;width:168px;height:148px;
+  display:grid;place-items:center;
+  user-select:none;touch-action:none;cursor:ew-resize;
   font-family:var(--ds-font);
-  min-width:140px;
+  outline:none;
 }
-.ds-scrub-label{
-  margin:0;font:500 var(--ds-text-label)/1 var(--ds-font);color:var(--ds-muted);
-  letter-spacing:.01em;text-transform:none;
+.ds-unread-pile{
+  position:absolute;inset:10px 12px 44px;pointer-events:none;
 }
-.ds-scrub-value-wrap{
-  position:relative;height:48px;min-width:2.6ch;
-  display:grid;place-items:center;overflow:hidden;
+.ds-unread-pile i{
+  position:absolute;left:50%;top:50%;
+  width:74px;height:46px;margin:-23px 0 0 -37px;
+  border-radius:18px 18px 18px 6px;
+  background:#fff;
+  box-shadow:inset 0 0 0 0.5px rgba(31,28,26,.10),0 10px 22px -12px rgba(0,0,0,.3);
+  transform:rotate(var(--r)) translate(var(--x),var(--y)) scale(var(--s,1));
+  transform-origin:center;
+  transition:transform .5s cubic-bezier(.34,1.45,.64,1),opacity .28s ease,background .22s ease,box-shadow .22s ease;
 }
-.ds-scrub-out,.ds-scrub-value{
+.ds-unread-pile i:nth-child(1){--r:-8deg;--x:-18px;--y:10px;z-index:1}
+.ds-unread-pile i:nth-child(2){--r:7deg;--x:16px;--y:8px;z-index:2}
+.ds-unread-pile i:nth-child(3){--r:-3deg;--x:-6px;--y:-4px;z-index:3}
+.ds-unread-pile i:nth-child(4){--r:5deg;--x:10px;--y:-12px;z-index:4}
+.ds-unread-pile i:nth-child(5){--r:-1deg;--x:0px;--y:-2px;z-index:5}
+.ds-unread.is-dragging .ds-unread-pile i{
+  background:color-mix(in srgb,var(--ds-accent) 12%,#fff);
+  box-shadow:inset 0 0 0 0.5px color-mix(in srgb,var(--ds-accent) 28%,transparent),0 10px 22px -12px rgba(0,0,0,.3);
+}
+.ds-unread.is-empty .ds-unread-pile i{
+  --s:.35;opacity:0;
+}
+.ds-unread.is-flood .ds-unread-pile i{
+  animation:unreadPop .56s cubic-bezier(.34,1.45,.64,1) both;
+}
+.ds-unread.is-flood .ds-unread-pile i:nth-child(1){animation-delay:0ms}
+.ds-unread.is-flood .ds-unread-pile i:nth-child(2){animation-delay:36ms}
+.ds-unread.is-flood .ds-unread-pile i:nth-child(3){animation-delay:72ms}
+.ds-unread.is-flood .ds-unread-pile i:nth-child(4){animation-delay:108ms}
+.ds-unread.is-flood .ds-unread-pile i:nth-child(5){animation-delay:144ms}
+@keyframes unreadPop{
+  0%{transform:rotate(var(--r)) translate(var(--x),18px) scale(.4);opacity:0}
+  100%{transform:rotate(var(--r)) translate(var(--x),var(--y)) scale(1);opacity:1}
+}
+@keyframes scrubOutUp{from{transform:translateY(0) scale(1);opacity:1}to{transform:translateY(-110%) scale(.9);opacity:0}}
+@keyframes scrubInUp{from{transform:translateY(110%) scale(.9);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+@keyframes scrubOutDown{from{transform:translateY(0) scale(1);opacity:1}to{transform:translateY(110%) scale(.9);opacity:0}}
+@keyframes scrubInDown{from{transform:translateY(-110%) scale(.9);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.ds-unread-num-wrap{
+  position:relative;z-index:6;height:40px;min-width:2.4ch;
+  display:grid;place-items:center;overflow:hidden;pointer-events:none;
+}
+.ds-unread-out,.ds-unread-num{
   grid-area:1/1;
   font:600 var(--ds-text-display)/1 var(--ds-font);font-variant-numeric:tabular-nums;letter-spacing:-.04em;
   color:var(--ds-ink);text-align:center;
-  will-change:transform,opacity;
 }
-.ds-scrub-out{opacity:0;pointer-events:none}
-.ds-scrub-value{
-  cursor:ew-resize;outline:none;
-  transition:color .22s ease,transform .42s cubic-bezier(.34,1.45,.64,1);
-}
-.ds-scrub.is-dragging .ds-scrub-value{
-  color:var(--ds-accent);
-  transform:scale(1.05);
-}
-.ds-scrub.is-settle .ds-scrub-value{
-  color:var(--ds-accent);
-  transform:scale(1.04);
-}
-.ds-scrub.is-reel-up .ds-scrub-out{
-  animation:scrubOutUp .4s cubic-bezier(.34,1.45,.64,1) both;
-}
-.ds-scrub.is-reel-up .ds-scrub-value{
-  animation:scrubInUp .4s cubic-bezier(.34,1.45,.64,1) both;
-}
-.ds-scrub.is-reel-down .ds-scrub-out{
-  animation:scrubOutDown .4s cubic-bezier(.34,1.45,.64,1) both;
-}
-.ds-scrub.is-reel-down .ds-scrub-value{
-  animation:scrubInDown .4s cubic-bezier(.34,1.45,.64,1) both;
-}
-@keyframes scrubOutUp{
-  from{transform:translateY(0) scale(1);opacity:1}
-  to{transform:translateY(-110%) scale(.9);opacity:0}
-}
-@keyframes scrubInUp{
-  from{transform:translateY(110%) scale(.9);opacity:0}
-  to{transform:translateY(0) scale(1);opacity:1}
-}
-@keyframes scrubOutDown{
-  from{transform:translateY(0) scale(1);opacity:1}
-  to{transform:translateY(110%) scale(.9);opacity:0}
-}
-@keyframes scrubInDown{
-  from{transform:translateY(-110%) scale(.9);opacity:0}
-  to{transform:translateY(0) scale(1);opacity:1}
-}
-.ds-scrub-rail{
-  position:relative;width:120px;height:3px;border-radius:999px;
-  background:rgba(0,0,0,.08);
-  transition:height .28s cubic-bezier(.22,1,.36,1);
-}
-.ds-scrub.is-dragging .ds-scrub-rail{height:4px}
-.ds-scrub-fill{
-  position:absolute;left:0;top:0;bottom:0;width:36%;border-radius:999px;
-  background:var(--ds-accent);
-  transition:width .42s cubic-bezier(.34,1.45,.64,1);
-  pointer-events:none;
-}
-.ds-scrub.is-dragging .ds-scrub-fill{transition:none}
-.ds-scrub-thumb{
-  position:absolute;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;
-  border-radius:50%;background:#fff;left:36%;
-  box-shadow:
-    0 0 0 2px var(--ds-stage),
-    0 0 0 2.5px rgba(0,0,0,.1),
-    0 1px 3px rgba(0,0,0,.12);
-  transition:left .42s cubic-bezier(.34,1.45,.64,1),transform .34s cubic-bezier(.34,1.45,.64,1);
-  pointer-events:none;
-}
-.ds-scrub.is-dragging .ds-scrub-thumb{transition:none;transform:scale(1.15)}
-.ds-scrub-value:focus-visible{
-  /* quiet selected: accent only, no glow ring */
-}
-.tile-preview .ds-scrub{pointer-events:none;transform:scale(.88);transform-origin:center}
-.tile-preview .ds-scrub-label{display:none}
-.tile-preview .ds-scrub-value,.tile-preview .ds-scrub-out{font-size:34px}
-.tile-preview .ds-scrub-rail{width:96px}
+.ds-unread-out{opacity:0}
+.ds-unread.is-dragging .ds-unread-num,
+.ds-unread.is-flood .ds-unread-num{color:var(--ds-accent)}
+.ds-unread.is-reel-up .ds-unread-out{animation:scrubOutUp .4s cubic-bezier(.34,1.45,.64,1) both}
+.ds-unread.is-reel-up .ds-unread-num{animation:scrubInUp .4s cubic-bezier(.34,1.45,.64,1) both}
+.ds-unread.is-reel-down .ds-unread-out{animation:scrubOutDown .4s cubic-bezier(.34,1.45,.64,1) both}
+.ds-unread.is-reel-down .ds-unread-num{animation:scrubInDown .4s cubic-bezier(.34,1.45,.64,1) both}
+.ds-unread:focus-visible{outline:2px solid var(--ds-accent);outline-offset:6px;border-radius:16px}
+.tile-preview .ds-unread{pointer-events:none;transform:scale(.92);transform-origin:center}
 @media (prefers-reduced-motion:reduce){
-  .ds-scrub-value,.ds-scrub-fill,.ds-scrub-thumb,.ds-scrub-out{transition:none!important;animation:none!important}
-  .ds-scrub.is-reel-up .ds-scrub-value,.ds-scrub.is-reel-down .ds-scrub-value{animation:none!important;opacity:1;transform:none}
-  .ds-scrub.is-reel-up .ds-scrub-out,.ds-scrub.is-reel-down .ds-scrub-out{opacity:0}
+  .ds-unread-pile i,.ds-unread-num,.ds-unread-out{transition:none!important;animation:none!important}
+  .ds-unread.is-flood .ds-unread-pile i{animation:none!important;opacity:1;transform:rotate(var(--r)) translate(var(--x),var(--y)) scale(1)}
 }
+
 
 
 /* Day 16 drop zone — one card, idle↔filled morph */
@@ -2406,7 +2380,7 @@ const pieces=[
 {id:"day-15",day:"Day 15",title:"Weekly pulse",desc:"Bars spring in. Hover a day to read the pulse.",ready:true,code:"<!-- Weekly pulse -->\n<div class=\"ds-pulse is-in is-active has-sel\">\n  <div class=\"ds-pulse-top\">\n    <div class=\"ds-pulse-readout\"><span class=\"ds-pulse-value\">48</span></div>\n  </div>\n  <div class=\"ds-pulse-well\"><div class=\"ds-pulse-chart\">\n    <span class=\"ds-pulse-bar\" style=\"--h:46%;display:inline-block;width:26px;height:46%;border-radius:999px;background:rgba(0,0,0,.08)\"></span>\n  </div></div>\n</div>\n<style>\n.ds-pulse{font-family:Geist,system-ui,sans-serif;width:min(292px,100%)}\n.ds-pulse-value{font:600 26px Geist,system-ui,sans-serif;color:var(--ds-accent,#2e6b5c);font-variant-numeric:tabular-nums}\n.ds-pulse-bar{border-radius:999px;background:var(--ds-accent,#2e6b5c)}\n</style>",prompt:"Build a Weekly pulse chart. Spec: Geist, --ds-accent. Header: This week + selected day name + tabular visits readout with digit reel on change. Soft well behind seven pill bars (Mon-Sun). Bars spring from scaleY(0) with stagger (~50ms) using cubic-bezier(.34,1.45,.64,1). Hairline baseline. Selecting a day (hover/focus/click): accent fill, slight lift, day label accents, siblings quiet down, readout reels to that value. Default peak day. Quiet focus outline on bar. No hint. Acceptance: keyboard operable; reduced-motion skips stagger/reel."},
 {id:"day-14",day:"Day 14",title:"Copy link",desc:"One click. Link copied. Check springs in.",ready:true,code:"<!-- Copy link -->\n<div class=\"ds-copy\">\n  <button class=\"ds-copy-btn\" type=\"button\">\n    <span class=\"ds-copy-label\">\n      <span class=\"ds-copy-idle\"><i class=\"ti ti-link\"></i><span>Copy link</span></span>\n      <span class=\"ds-copy-done\"><i class=\"ti ti-check\"></i><span>Copied</span></span>\n    </span>\n  </button>\n</div>\n<style>\n.ds-copy{display:flex;flex-direction:column;align-items:center;gap:14px;font-family:Geist,system-ui,sans-serif}\n.ds-copy-btn{border:0;cursor:pointer;height:48px;min-width:168px;padding:0 22px;border-radius:12px;background:#fff;color:#1f1c1a;font:600 14px Geist,system-ui,sans-serif;box-shadow:inset 0 0 0 0.5px rgba(0,0,0,.06);display:inline-flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:transform .42s cubic-bezier(.34,1.45,.64,1),background .28s,color .22s}\n.ds-copy-label{display:grid;place-items:center}\n.ds-copy-label>span{grid-area:1/1;display:inline-flex;align-items:center;gap:8px;transition:opacity .28s,transform .42s cubic-bezier(.34,1.45,.64,1)}\n.ds-copy-done{opacity:0;transform:translateY(8px)}\n.ds-copy-btn.is-done{background:var(--ds-accent,#2e6b5c);color:#fff;transform:scale(1.04)}\n.ds-copy-btn.is-done .ds-copy-idle{opacity:0;transform:translateY(-8px)}\n.ds-copy-btn.is-done .ds-copy-done{opacity:1;transform:none}\n.ds-copy-url{margin:0;font:500 12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#6b6661}\n</style>",prompt:"Build a Copy link button. Spec: Geist 600 14px, 48px tall, 12px radius, white surface idle with hairline border. Label stacks Copy link (link icon) and Copied (check) in one grid cell. On click: soft press, spring success to accent fill, idle exits up while Copied + check spring in, quiet mono URL under the button flashes accent. Reset after ~1.8s. Uses --ds-accent tokens. Acceptance: no layout jump; works if clipboard API fails (still shows Copied); reduced-motion skips spring; focus visible."},
 {id:"day-13",day:"Day 13",title:"Slide to unlock",desc:"Slide to commit. Early release springs home.",ready:true,code:"<!-- Slide to unlock -->\n<div class=\"ds-unlock\">\n  <div class=\"ds-unlock-track\">\n    <div class=\"ds-unlock-fill\"></div>\n    <div class=\"ds-unlock-label\"><span>Slide to unlock</span><i class=\"ti ti-chevron-right\"></i></div>\n    <button class=\"ds-unlock-thumb\" type=\"button\" aria-label=\"Slide to unlock\"><i class=\"ti ti-lock\"></i></button>\n  </div>\n</div>\n<style>\n.ds-unlock{width:min(280px,100%);font-family:Geist,system-ui,sans-serif}\n.ds-unlock-track{position:relative;height:56px;border-radius:999px;background:rgba(0,0,0,.06);overflow:hidden}\n.ds-unlock-fill{position:absolute;inset:0 auto 0 0;width:0;background:color-mix(in srgb,var(--ds-accent,#2e6b5c) 14%,transparent);border-radius:999px}\n.ds-unlock-thumb{position:absolute;top:4px;left:4px;width:48px;height:48px;border:0;border-radius:50%;background:#fff;cursor:grab;box-shadow:0 8px 18px -8px rgba(0,0,0,.28)}\n.ds-unlock.is-unlocked .ds-unlock-fill{width:100%;background:var(--ds-accent,#2e6b5c)}\n.ds-unlock.is-unlocked .ds-unlock-thumb{background:transparent;color:#fff;box-shadow:none}\n</style>",prompt:"Build a slide-to-unlock control. Spec: ~56px pill track, lock thumb on the left, center label Slide to unlock with a soft chevron pulse. Drag right; fill follows softly. Past ~85%: armed (Release to unlock) with status reel. Early release: spring snap-back home. Commit: track fills accent, stacked lock→check spring, status Unlocked, auto-reset ~2s. Quiet focus hairline (no sage glow ring). No instructional hint. Geist, --ds-accent, Tabler. Acceptance: continuous drag; cancel vs commit obvious; pointer capture; reduced-motion skips jelly/reel."},
-{id:"day-12",day:"Day 12",title:"Value scrub",desc:"Drag the amount. Digits reel as it moves.",ready:true,code:"<!-- Value scrub -->\n<div class=\"ds-scrub\">\n  <p class=\"ds-scrub-label\">Amount</p>\n  <div class=\"ds-scrub-value\">36</div>\n  <div class=\"ds-scrub-rail\"><div class=\"ds-scrub-fill\" style=\"width:36%\"></div></div>\n</div>\n<style>\n.ds-scrub{display:inline-flex;flex-direction:column;align-items:center;gap:14px;font-family:Geist,system-ui,sans-serif}\n.ds-scrub-label{margin:0;font:500 12px/1 Geist,system-ui,sans-serif;color:#6b6661;letter-spacing:.04em;text-transform:uppercase}\n.ds-scrub-value{font:600 44px/1 Geist,system-ui,sans-serif;font-variant-numeric:tabular-nums;cursor:ew-resize;transition:color .22s,transform .42s cubic-bezier(.34,1.45,.64,1)}\n.ds-scrub.is-dragging .ds-scrub-value{color:var(--ds-accent,#2e6b5c);transform:scale(1.05)}\n.ds-scrub-rail{width:120px;height:3px;border-radius:999px;background:rgba(0,0,0,.08);position:relative}\n.ds-scrub-fill{position:absolute;inset:0 auto 0 0;width:36%;border-radius:999px;background:var(--ds-accent,#2e6b5c)}\n</style>",prompt:"Build a scrubbable Amount value 0-100. Spec: Geist 600 ~44px tabular nums, --ds-accent. Label Amount above. Drag horizontally (Shift = fine). Digits reel when the whole number changes. Thin accent rail under the value tracks position with a small thumb. Drag: accent color + slight scale, no tint wash. Release: spring settle. Keyboard arrows/Home/End. No instructional hint. Acceptance: continuous drag; soft settle; reduced-motion skips reel/spring."},
+{id:"day-12",day:"Day 12",title:"Unread",desc:"Clear the pile. It comes back.",ready:true,code:"<!-- Unread -->\n<div class=\"ds-unread\">\n  <div class=\"ds-unread-pile\"><i></i><i></i><i></i><i></i><i></i></div>\n  <div class=\"ds-unread-num\">47</div>\n</div>\n<style>\n.ds-unread{font-family:Geist,system-ui,sans-serif;width:168px;height:148px;display:grid;place-items:center;cursor:ew-resize}\n.ds-unread-pile i{position:absolute;width:74px;height:46px;border-radius:18px 18px 18px 6px;background:#fff;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.08)}\n.ds-unread-num{font:600 32px Geist,system-ui,sans-serif;font-variant-numeric:tabular-nums}\n</style>",prompt:"Build an Unread group-chat pile. Spec: Geist, --ds-accent, no label. Five stacked incoming bubbles (18px radius, incoming-chat corner) sit under a 32px tabular count starting at 47. Drag horizontally to change the count; dragging down has rubber resistance. Digits reel. At 0 the pile collapses, then after a short beat the bubbles spring back in with stagger and the count returns around 47. Keyboard arrows/Home/End. No helper text. Acceptance: clearing feels possible; zero never lasts; reduced-motion skips reel/pop."},
 {id:"day-11",day:"Day 11",title:"OTP input",desc:"Four cells. Type, paste, or backspace through.",ready:true,code:"<!-- OTP input -->\n<div class=\"ds-otp\">\n  <div class=\"ds-otp-row\">\n    <input class=\"ds-otp-cell\" maxlength=\"1\" inputmode=\"numeric\" value=\"4\" />\n    <input class=\"ds-otp-cell\" maxlength=\"1\" inputmode=\"numeric\" value=\"8\" />\n    <input class=\"ds-otp-cell\" maxlength=\"1\" inputmode=\"numeric\" value=\"2\" />\n    <input class=\"ds-otp-cell\" maxlength=\"1\" inputmode=\"numeric\" />\n  </div>\n</div>\n<style>\n.ds-otp-row{display:flex;gap:10px}\n.ds-otp-cell{width:48px;height:56px;border:0;border-radius:12px;background:#fff;text-align:center;font:600 22px Geist,system-ui,sans-serif;box-shadow:inset 0 0 0 0.5px rgba(0,0,0,.06);outline:0;transition:transform .34s cubic-bezier(.34,1.45,.64,1),box-shadow .25s}\n.ds-otp-cell:focus{transform:scale(1.03);box-shadow:inset 0 0 0 1px rgba(31,28,26,.22),0 2px 10px -4px rgba(31,28,26,.16)}\n</style>",prompt:"Build a 4-digit OTP input. Spec: Geist Sans, accent via CSS variable --ds-accent (default #2e6b5c), 48x56 cells, 12px radius, hairline borders. Auto-advance on digit entry, Backspace moves to previous, paste of 4 digits fills all cells. Focused cell scales slightly with a quiet ink hairline (no glow). Filled cells stay white like empty; the digit is the signal. Acceptance: keyboard only works; paste works; no layout jump."},
 {id:"day-10",day:"Day 10",title:"Clear input",desc:"Clear arrives softly. Clearing exhales the field.",ready:true,code:"<!-- Clear input -->\n<div class=\"ds-clear\">\n  <div class=\"ds-clear-field\">\n    <input class=\"ds-clear-input\" type=\"text\" placeholder=\"Email\" />\n    <button class=\"ds-clear-btn\" type=\"button\" aria-label=\"Clear\"><i class=\"ti ti-x\" aria-hidden=\"true\"></i></button>\n  </div>\n</div>\n<style>\n.ds-clear{position:relative;width:min(320px,100%)}\n.ds-clear-field{display:flex;align-items:center;height:48px;background:#fff;border:0.5px solid rgba(0,0,0,.06);border-radius:12px;box-shadow:0 1px 2px rgba(31,28,26,.04)}\n.ds-clear-input{flex:1;height:100%;border:0;background:0;padding:0 44px 0 16px;font:500 14px Geist,system-ui,sans-serif;outline:0}\n.ds-clear-input::placeholder{color:#b0aaa3;font-weight:400}\n.ds-clear-btn{position:absolute;right:6px;top:50%;width:32px;height:32px;border:0;border-radius:8px;background:0;color:#6b6661;display:grid;place-items:center;opacity:0;pointer-events:none;transform:translateY(-50%) scale(.85);transition:opacity .22s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.34,1.45,.64,1)}\n.ds-clear.has-value .ds-clear-btn{opacity:1;pointer-events:auto;transform:translateY(-50%) scale(1)}\n</style>",prompt:"Build a text input with a clear control. Spec: Geist Sans, sage accent #2e6b5c, hairline border rgba(0,0,0,.06), 48px field height, 12px radius. Clear (x) sits inside the field on the right. When empty, the clear control is invisible (opacity 0, scaled slightly down, no pointer events). When there is text, it fades and springs to full scale. Clicking clear empties the field and refocuses the input. Selected state is a quieter hairline and slight lift (no accent glow ring). Acceptance: no layout jump when the clear button appears; works with mouse and keyboard."},
 {id:"day-09",day:"Day 9",title:"Snap slider",desc:"Drag free. Release and it springs to the tick.",ready:true,code:"<!-- Snap slider -->\n<div class=\"ds-slider\">\n  <div class=\"ds-slider-top\"><span class=\"ds-slider-label\">Intensity</span><span class=\"ds-slider-value\">50</span></div>\n  <div class=\"ds-slider-track\">\n    <div class=\"ds-slider-rail\"><div class=\"ds-slider-fill\" style=\"width:50%\"></div></div>\n    <div class=\"ds-slider-ticks\" aria-hidden=\"true\"><span class=\"ds-slider-tick\" style=\"left:0%\"></span><span class=\"ds-slider-tick\" style=\"left:25%\"></span><span class=\"ds-slider-tick is-active\" style=\"left:50%\"></span><span class=\"ds-slider-tick\" style=\"left:75%\"></span><span class=\"ds-slider-tick\" style=\"left:100%\"></span></div>\n    <div class=\"ds-slider-thumb\" style=\"left:50%\"></div>\n  </div>\n  <div class=\"ds-slider-marks\" aria-hidden=\"true\"><span class=\"ds-slider-mark\" style=\"left:0%\">0</span><span class=\"ds-slider-mark\" style=\"left:25%\">25</span><span class=\"ds-slider-mark is-active\" style=\"left:50%\">50</span><span class=\"ds-slider-mark\" style=\"left:75%\">75</span><span class=\"ds-slider-mark\" style=\"left:100%\">100</span></div>\n</div>\n<style>\n.ds-slider{display:flex;flex-direction:column;gap:14px;width:min(280px,100%);font-family:Geist,system-ui,sans-serif}\n.ds-slider-top{display:flex;justify-content:space-between;align-items:center}\n.ds-slider-label{font:500 13px Geist,system-ui,sans-serif;color:#6b6661}\n.ds-slider-value{font:600 22px/1 Geist,system-ui,sans-serif;font-variant-numeric:tabular-nums}\n.ds-slider-track{position:relative;height:36px;display:flex;align-items:center;margin:0 11px}\n.ds-slider-rail{position:absolute;left:0;right:0;height:3px;border-radius:999px;background:rgba(0,0,0,.08)}\n.ds-slider-fill{height:100%;width:50%;border-radius:999px;background:var(--ds-accent,#2e6b5c);transition:width .55s cubic-bezier(.34,1.45,.64,1)}\n.ds-slider-ticks{position:absolute;left:0;right:0;top:50%;height:0}\n.ds-slider-tick{position:absolute;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:rgba(0,0,0,.14)}\n.ds-slider-tick.is-active{background:var(--ds-accent,#2e6b5c);transform:scale(1.35)}\n.ds-slider-thumb{position:absolute;top:50%;left:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:#fff;box-shadow:0 4px 12px -3px color-mix(in srgb,var(--ds-accent,#2e6b5c) 38%,transparent);transition:left .55s cubic-bezier(.34,1.45,.64,1)}\n.ds-slider-marks{position:relative;height:14px;margin:0 11px}\n.ds-slider-mark{position:absolute;top:0;transform:translateX(-50%);font:500 11px Geist,system-ui,sans-serif;color:#a39e97;font-variant-numeric:tabular-nums}\n.ds-slider-mark.is-active{color:var(--ds-accent,#2e6b5c)}\n</style>",prompt:"Build a snap slider labeled Intensity from 0 to 100 in steps of 25. Spec: Geist, --ds-accent tokens (no hardcoded sage). Drag free along the track; fill and thumb follow live. Near ticks soft-highlight while dragging. On release, thumb/fill spring-settle to the nearest tick (cubic-bezier .34,1.45,.64,1) with a value digit reel and active tick pulse. White thumb with accent glow; rail thickens while dragging. Keyboard arrows/Home/End. Acceptance: free drag then soft snap; accent-aware; reduced-motion skips reel/spring."},
@@ -3499,27 +3473,21 @@ function wireOtp(root){
 }
 
 function scrubMarkup(interactive){
-  const aria = interactive ? "" : " aria-hidden=\"true\"";
-  const tab = interactive ? "0" : "-1";
-  return "<div class=\"ds-scrub\""+aria+">"
-    +"<p class=\"ds-scrub-label\">Amount</p>"
-    +"<div class=\"ds-scrub-value-wrap\">"
-    +"<span class=\"ds-scrub-out\" aria-hidden=\"true\"></span>"
-    +"<div class=\"ds-scrub-value\" role=\"slider\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"36\" aria-label=\"Amount\" tabindex=\""+tab+"\">36</div>"
-    +"</div>"
-    +"<div class=\"ds-scrub-rail\" aria-hidden=\"true\">"
-    +"<div class=\"ds-scrub-fill\" style=\"width:36%\"></div>"
-    +"<div class=\"ds-scrub-thumb\" style=\"left:36%\"></div>"
+  const aria = interactive ? " tabindex=\"0\" role=\"slider\" aria-valuemin=\"0\" aria-valuemax=\"99\" aria-valuenow=\"47\" aria-label=\"Unread\"" : " aria-hidden=\"true\"";
+  return "<div class=\"ds-unread\""+aria+">"
+    +"<div class=\"ds-unread-pile\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i><i></i></div>"
+    +"<div class=\"ds-unread-num-wrap\">"
+    +"<span class=\"ds-unread-out\" aria-hidden=\"true\"></span>"
+    +"<div class=\"ds-unread-num\">47</div>"
     +"</div>"
     +"</div>";
 }
 function wireScrub(root){
-  const wrap=root.querySelector(".ds-scrub");
-  const el=wrap.querySelector(".ds-scrub-value");
-  const outEl=wrap.querySelector(".ds-scrub-out");
-  const fill=wrap.querySelector(".ds-scrub-fill");
-  const thumb=wrap.querySelector(".ds-scrub-thumb");
-  let value=36, dragging=false, startX=0, startVal=0, settleTimer=0, reelTimer=0, lastShown=36;
+  const wrap=root.querySelector(".ds-unread");
+  if(!wrap) return;
+  const el=wrap.querySelector(".ds-unread-num");
+  const outEl=wrap.querySelector(".ds-unread-out");
+  let value=47, dragging=false, startX=0, startVal=47, lastShown=47, reelTimer=0, floodTimer=0;
   function reel(prev, next){
     if(reduceMotion || prev===next){
       el.textContent=String(next);
@@ -3538,76 +3506,79 @@ function wireScrub(root){
       outEl.textContent="";
     }, 400);
   }
-  function paintRail(v){
-    const p=Math.max(0,Math.min(100,v));
-    fill.style.width=p+"%";
-    thumb.style.left=p+"%";
+  function spread(v){
+    const t=Math.max(0,Math.min(1,v/47));
+    wrap.style.setProperty("--s", (0.72+t*0.28).toFixed(3));
+    wrap.classList.toggle("is-empty", v<0.5);
   }
-  function paint(v, settling, doReel){
-    value=v;
-    const shown=Math.round(v);
-    el.setAttribute("aria-valuenow", String(shown));
-    paintRail(v);
-    wrap.classList.toggle("is-settle", !!settling);
-    if(doReel){
+  function paint(v, doReel){
+    value=Math.max(0,Math.min(99,v));
+    const shown=Math.round(value);
+    wrap.setAttribute("aria-valuenow", String(shown));
+    spread(value);
+    if(doReel || (dragging && shown!==lastShown)){
       reel(lastShown, shown);
       lastShown=shown;
-    }else if(dragging){
-      if(shown!==lastShown){
-        reel(lastShown, shown);
-        lastShown=shown;
-      }else{
-        el.textContent=String(shown);
-      }
     }else{
       el.textContent=String(shown);
       lastShown=shown;
     }
   }
-  function settle(){
-    const target=Math.round(value);
-    paint(target, true, true);
-    clearTimeout(settleTimer);
-    settleTimer=setTimeout(()=>wrap.classList.remove("is-settle"), 420);
+  function flood(){
+    wrap.classList.remove("is-empty");
+    wrap.classList.add("is-flood");
+    const next=47+Math.floor(Math.random()*8);
+    paint(next, true);
+    if(window.vrSound) vrSound.tick(0.84);
+    clearTimeout(floodTimer);
+    floodTimer=setTimeout(()=>wrap.classList.remove("is-flood"), 700);
   }
-  el.addEventListener("pointerdown",e=>{
+  wrap.addEventListener("pointerdown",e=>{
+    if(e.button && e.button!==0) return;
     dragging=true;
     startX=e.clientX; startVal=value;
-    el.setPointerCapture(e.pointerId);
+    wrap.setPointerCapture(e.pointerId);
     wrap.classList.add("is-dragging");
-    wrap.classList.remove("is-settle");
+    wrap.classList.remove("is-flood");
+    clearTimeout(floodTimer);
   });
-  el.addEventListener("pointermove",e=>{
+  wrap.addEventListener("pointermove",e=>{
     if(!dragging)return;
-    const fine=e.shiftKey?0.12:0.32;
-    const next=Math.max(0, Math.min(100, startVal + (e.clientX-startX)*fine));
-    paint(next, false, false);
+    const dx=e.clientX-startX;
+    let next=startVal + dx*0.28;
+    if(next<startVal){
+      const down=startVal-next;
+      next=startVal - down*0.55;
+    }
+    paint(next, false);
   });
   function end(){
     if(!dragging)return;
     dragging=false;
     wrap.classList.remove("is-dragging");
-    settle();
+    const shown=Math.round(value);
+    paint(shown, true);
+    if(shown===0){
+      clearTimeout(floodTimer);
+      floodTimer=setTimeout(flood, reduceMotion?80:520);
+    }
   }
-  el.addEventListener("pointerup",end);
-  el.addEventListener("pointercancel",end);
-  el.addEventListener("keydown",e=>{
+  wrap.addEventListener("pointerup",end);
+  wrap.addEventListener("pointercancel",end);
+  wrap.addEventListener("keydown",e=>{
     const step=e.shiftKey?1:5;
-    if(e.key==="ArrowRight"||e.key==="ArrowUp"){ paint(Math.min(100,value+step), true, true); e.preventDefault(); }
-    if(e.key==="ArrowLeft"||e.key==="ArrowDown"){ paint(Math.max(0,value-step), true, true); e.preventDefault(); }
-    if(e.key==="Home"){ paint(0, true, true); e.preventDefault(); }
-    if(e.key==="End"){ paint(100, true, true); e.preventDefault(); }
+    if(e.key==="ArrowRight"||e.key==="ArrowUp"){ paint(Math.min(99,value+step), true); e.preventDefault(); }
+    if(e.key==="ArrowLeft"||e.key==="ArrowDown"){
+      const next=Math.max(0,value-step);
+      paint(next, true);
+      if(next===0){ clearTimeout(floodTimer); floodTimer=setTimeout(flood, reduceMotion?80:520); }
+      e.preventDefault();
+    }
+    if(e.key==="Home"){ paint(0, true); clearTimeout(floodTimer); floodTimer=setTimeout(flood, reduceMotion?80:520); e.preventDefault(); }
+    if(e.key==="End"){ paint(99, true); e.preventDefault(); }
   });
-  paint(value, false, false);
+  paint(value, false);
 }
-
-
-
-
-
-
-
-
 
 function peelMarkup(interactive){
   const aria = interactive ? "" : " aria-hidden=\"true\"";
