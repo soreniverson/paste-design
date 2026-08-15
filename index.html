@@ -1493,14 +1493,6 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
   white-space:pre;
 }
 .ds-grav-ch.is-space{opacity:.55}
-.ds-grav-field.is-shake{
-  animation:gravShake .34s cubic-bezier(.34,1.45,.64,1);
-}
-@keyframes gravShake{
-  0%,100%{transform:translateX(0)}
-  28%{transform:translateX(-5px)}
-  62%{transform:translateX(4px)}
-}
 .tile-preview .ds-grav{
   pointer-events:none;
   width:min(260px,100%);
@@ -1511,7 +1503,6 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
 .tile-preview:has(.ds-grav){place-items:center}
 @media (prefers-reduced-motion:reduce){
   .ds-grav-field.is-focus .ds-grav-caret{animation:none;opacity:1}
-  .ds-grav-field.is-shake{animation:none}
 }
 
 /* Day 18 flick snooze */
@@ -3740,7 +3731,7 @@ function wireGrav(root){
   const G=980, REST=0.16, FRIC=0.88, VR_FLOOR=0.94, VR_AIR=0.985, MAX=28;
   let bodies=[];
   let prev="";
-  let raf=0, lastT=0, shakeT=0;
+  let raf=0, lastT=0;
   function bounds(){
     const W=Math.max(8, bin.clientWidth);
     const H=Math.max(8, bin.clientHeight);
@@ -3805,14 +3796,6 @@ function wireGrav(root){
       if(b.el.parentNode) b.el.remove();
     },280);
     kick();
-  }
-  function shake(){
-    if(reduceMotion) return;
-    field.classList.remove("is-shake");
-    void field.offsetWidth;
-    field.classList.add("is-shake");
-    clearTimeout(shakeT);
-    shakeT=setTimeout(function(){ field.classList.remove("is-shake"); },360);
   }
   function diffInput(){
     let now=input.value.replace(/[\r\n]/g,"");
@@ -3964,8 +3947,7 @@ function wireGrav(root){
   input.addEventListener("blur", function(){ field.classList.remove("is-focus"); });
   input.addEventListener("input", diffInput);
   input.addEventListener("keydown", function(e){
-    if(e.key==="Enter"){ e.preventDefault(); return; }
-    if(e.key.length===1 && !e.metaKey && !e.ctrlKey && !e.altKey && input.value.length>=MAX) shake();
+    if(e.key==="Enter") e.preventDefault();
   });
 }
 
