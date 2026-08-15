@@ -3714,13 +3714,13 @@ function gravMarkup(interactive){
   const tab = interactive ? "" : " tabindex=\"-1\"";
   const hide = interactive ? "" : " aria-hidden=\"true\"";
   const pile = interactive ? "" : (
-    "<i class=\"ds-grav-ch\" style=\"transform:translate(24px,28px) rotate(-10deg)\">g</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(40px,30px) rotate(8deg)\">r</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(56px,27px) rotate(-6deg)\">a</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(72px,31px) rotate(12deg)\">v</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(88px,29px) rotate(-4deg)\">i</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(100px,27px) rotate(9deg)\">t</i>"
-    +"<i class=\"ds-grav-ch\" style=\"transform:translate(116px,30px) rotate(-12deg)\">y</i>"
+    "<i class=\"ds-grav-ch\" style=\"transform:translate(22px,30px) rotate(-10deg)\">g</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(33px,28px) rotate(8deg)\">r</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(45px,31px) rotate(-6deg)\">a</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(57px,27px) rotate(12deg)\">v</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(69px,32px) rotate(-4deg)\">i</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(78px,29px) rotate(9deg)\">t</i>"
+    +"<i class=\"ds-grav-ch\" style=\"transform:translate(90px,31px) rotate(-12deg)\">y</i>"
   );
   return "<div class=\"ds-grav\""+(interactive?"":" aria-hidden=\"true\"")+">"
     +"<div class=\"ds-grav-field\">"
@@ -3849,24 +3849,23 @@ function wireGrav(root){
       b.x+=b.vx*dt;
       b.y+=b.vy*dt;
       b.r+=b.vr*dt;
-      const cx=b.x+b.w*0.5, cy=b.y+b.h*0.5;
-      if(cx<b.rad){
-        b.x=b.rad-b.w*0.5;
+      if(b.x<0){
+        b.x=0;
         b.vx=Math.abs(b.vx)*REST+Math.random()*10;
         b.vr+=(Math.random()-0.5)*50;
-      }else if(cx>W-b.rad){
-        b.x=W-b.rad-b.w*0.5;
+      }else if(b.x>W-b.w){
+        b.x=W-b.w;
         b.vx=-Math.abs(b.vx)*REST-Math.random()*10;
         b.vr+=(Math.random()-0.5)*50;
       }
-      if(cy<b.rad){
-        b.y=b.rad-b.h*0.5;
+      if(b.y<0){
+        b.y=0;
         b.vy=Math.abs(b.vy)*REST;
       }
-      const floor=H-b.rad;
-      if(cy>=floor){
+      const floor=H-b.h;
+      if(b.y>=floor){
         const impact=b.vy;
-        b.y=floor-b.h*0.5;
+        b.y=floor;
         if(impact>0){
           if(!b.popping && b.air && impact>80 && window.vrSound) vrSound.tick(0.72);
           b.vy=-impact*REST;
@@ -3884,52 +3883,55 @@ function wireGrav(root){
       }
     }
     const live=bodies.filter(function(b){ return !b.popping; });
-    function clampCircle(b){
-      const cx=Math.max(b.rad, Math.min(W-b.rad, b.x+b.w*0.5));
-      const cy=Math.max(b.rad, Math.min(H-b.rad, b.y+b.h*0.5));
-      b.x=cx-b.w*0.5;
-      b.y=cy-b.h*0.5;
+    function hx(b){ return b.w*0.47; }
+    function hy(b){ return b.h*0.40; }
+    function clampBox(b){
+      b.x=Math.max(0, Math.min(W-b.w, b.x));
+      b.y=Math.max(0, Math.min(H-b.h, b.y));
     }
     for(let pass=0;pass<8;pass++){
       for(let i=0;i<live.length;i++){
         for(let j=i+1;j<live.length;j++){
           const a=live[i], c=live[j];
-          let dx=(a.x+a.w*0.5)-(c.x+c.w*0.5);
-          let dy=(a.y+a.h*0.5)-(c.y+c.h*0.5);
-          let dist=Math.hypot(dx,dy);
-          const min=a.rad+c.rad;
-          if(dist<0.0001){ dx=1; dy=0; dist=1; }
-          if(dist<min){
-            const nx=dx/dist, ny=dy/dist;
-            const overlap=min-dist;
-            a.x+=nx*overlap*0.5;
-            a.y+=ny*overlap*0.5;
-            c.x-=nx*overlap*0.5;
-            c.y-=ny*overlap*0.5;
-            const rv=(a.vx-c.vx)*nx+(a.vy-c.vy)*ny;
-            if(rv<0){
-              const imp=rv*0.55;
-              a.vx-=imp*nx; a.vy-=imp*ny;
-              c.vx+=imp*nx; c.vy+=imp*ny;
+          const ax=a.x+a.w*0.5, ay=a.y+a.h*0.5;
+          const cx=c.x+c.w*0.5, cy=c.y+c.h*0.5;
+          const ox=hx(a)+hx(c)-Math.abs(ax-cx);
+          const oy=hy(a)+hy(c)-Math.abs(ay-cy);
+          if(ox>0 && oy>0){
+            if(ox<oy){
+              const dir=ax<cx?-1:1;
+              a.x+=dir*ox*0.5; c.x-=dir*ox*0.5;
+              const rv=a.vx-c.vx;
+              if(rv*dir>0){
+                const imp=rv*0.5;
+                a.vx-=imp; c.vx+=imp;
+              }
+            }else{
+              const dir=ay<cy?-1:1;
+              a.y+=dir*oy*0.5; c.y-=dir*oy*0.5;
+              const rv=a.vy-c.vy;
+              if(rv*dir>0){
+                const imp=rv*0.5;
+                a.vy-=imp; c.vy+=imp;
+              }
             }
-            clampCircle(a);
-            clampCircle(c);
+            clampBox(a);
+            clampBox(c);
           }
         }
       }
     }
     for(let i=0;i<live.length;i++){
       const b=live[i];
-      clampCircle(b);
-      const cy=b.y+b.h*0.5;
-      const onFloor=cy+b.rad>=H-0.8;
+      clampBox(b);
+      const onFloor=b.y>=H-b.h-1;
       let overlapping=false;
       for(let j=0;j<live.length;j++){
         if(i===j) continue;
         const o=live[j];
-        const dx=(b.x+b.w*0.5)-(o.x+o.w*0.5);
-        const dy=(b.y+b.h*0.5)-(o.y+o.h*0.5);
-        if(Math.hypot(dx,dy)<b.rad+o.rad-0.6){ overlapping=true; break; }
+        const ox=hx(b)+hx(o)-Math.abs((b.x+b.w*0.5)-(o.x+o.w*0.5));
+        const oy=hy(b)+hy(o)-Math.abs((b.y+b.h*0.5)-(o.y+o.h*0.5));
+        if(ox>0.4 && oy>0.4){ overlapping=true; break; }
       }
       if(!overlapping && onFloor && Math.abs(b.vy)<40){
         b.vy=0;
