@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#ffffff" />
 <title>Visual Repository</title>
 <meta name="description" content="Polished UI details, one piece at a time." />
 <meta property="og:type" content="website" />
@@ -1520,7 +1521,7 @@ body.is-sheet{overflow:hidden;overscroll-behavior:none;position:fixed;width:100%
 }
 
 /* Friday mail */
-.mail-fab{position:fixed;right:20px;bottom:20px;z-index:40;transition:opacity .28s ease,transform .34s cubic-bezier(.22,1,.36,1)}
+.mail-fab{position:fixed;right:20px;bottom:max(20px, env(safe-area-inset-bottom, 0px));z-index:40;transition:opacity .28s ease,transform .34s cubic-bezier(.22,1,.36,1)}
 .mail-chip{
   display:inline-flex;align-items:center;gap:8px;
   height:40px;padding:0 14px;border-radius:999px;border:0;cursor:pointer;
@@ -1613,7 +1614,7 @@ body.is-sheet .mail-fab{
   opacity:0;pointer-events:none;transform:translateY(8px);
 }
 @media (max-width:800px){
-  .mail-fab{right:12px;bottom:18px;overflow:visible}
+  .mail-fab{right:12px;bottom:max(20px, env(safe-area-inset-bottom, 0px));overflow:visible}
   .mail-panel{
     position:fixed;
     left:12px;right:12px;width:auto;
@@ -1646,7 +1647,7 @@ body.is-sheet .mail-fab{
 
 /* Chrome: accent + density */
 .chrome-fab{
-  position:fixed;left:20px;bottom:20px;z-index:40;
+  position:fixed;left:20px;bottom:max(20px, env(safe-area-inset-bottom, 0px));z-index:40;
   display:flex;align-items:flex-end;gap:10px;
 }
 .accent-fab{position:relative;left:auto;bottom:auto;}
@@ -1748,9 +1749,8 @@ body.is-sheet .mail-fab{
 
 /* Mobile UX pass (after density so it wins) */
 @media (max-width:800px){
-  .gallery{
-    padding-bottom:80px;
-  }
+  .gallery{padding-bottom:0}
+  body{padding-bottom:calc(80px + env(safe-area-inset-bottom, 0px))}
   .tile-inner{padding:20px 16px 56px}
   .tile-name{
     opacity:1;transform:none;
@@ -1823,7 +1823,7 @@ body.is-sheet .mail-fab{
   }
   .chrome-fab{
     left:12px;right:auto;
-    bottom:18px;
+    bottom:max(20px, env(safe-area-inset-bottom, 0px));
     overflow:visible;
     justify-content:flex-start;
     z-index:30;
@@ -1846,23 +1846,6 @@ body.is-sheet .mail-fab{
   body.is-sheet .detail-scrim{display:block;opacity:1;pointer-events:auto}
 }
 .detail-scrim,.detail-scrim[hidden]{display:none}
-.ios-clear{
-  display:none;
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  width:100%;
-  height:5px;
-  background-color:rgba(255,255,255,0);
-  pointer-events:none;
-  z-index:50;
-}
-@supports (-webkit-touch-callout: none){
-  @media (max-width:800px){
-    .ios-clear{display:block}
-  }
-}
 /* Accent control */
 .accent-chip{
   display:inline-flex;align-items:center;gap:10px;
@@ -2377,7 +2360,6 @@ body.is-sheet .mail-fab{
 </style>
 </head>
 <body>
-<div class="ios-clear" aria-hidden="true"></div>
 <div class="shell">
 <div class="gallery" id="gallery" aria-label="UI gallery">
 <section class="detail" id="detail">
