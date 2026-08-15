@@ -1822,15 +1822,32 @@ body.is-sheet .mail-fab{
   }
   .ds-seen{width:min(100%,340px)}
   .detail-scrim{
-    display:block;
     position:fixed;inset:0;z-index:18;
     background:color-mix(in srgb,var(--ds-ink) 28%,transparent);
     opacity:0;pointer-events:none;
     transition:opacity .28s var(--ds-ease);
   }
-  body.is-sheet .detail-scrim{opacity:1;pointer-events:auto}
+  body.is-sheet .detail-scrim{display:block;opacity:1;pointer-events:auto}
 }
-.detail-scrim{display:none}
+.detail-scrim,.detail-scrim[hidden]{display:none}
+.ios-bar{
+  display:none;
+  position:fixed;
+  left:0;
+  bottom:-8px;
+  width:100%;
+  min-height:12px;
+  margin:0;
+  padding:0;
+  background:#ffffff;
+  pointer-events:none;
+  z-index:5;
+}
+@supports (-webkit-text-size-adjust: none) and (font: -apple-system-body) and (-webkit-touch-callout: none){
+  @media (max-width:800px){
+    .ios-bar{display:block}
+  }
+}
 
 /* Accent control */
 .accent-chip{
@@ -2346,6 +2363,7 @@ body.is-sheet .mail-fab{
 </style>
 </head>
 <body>
+<div class="ios-bar" aria-hidden="true"></div>
 <div class="shell">
 <div class="gallery" id="gallery" aria-label="UI gallery">
 <section class="detail" id="detail">
