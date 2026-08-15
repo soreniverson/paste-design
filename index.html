@@ -1674,26 +1674,41 @@ body.is-sheet .mail-fab{
 }
 .density-icon{
   position:relative;width:16px;height:16px;display:block;
+}
+.density-icon i{
+  position:absolute;display:block;background:currentColor;border-radius:2px;
+  opacity:1;
+  transition:inset .42s cubic-bezier(.22,1,.36,1),opacity .28s ease,border-radius .35s ease;
+}
+/* 4-up */
+.density-btn[data-density="4"] .density-icon i:nth-child(1){inset:0 56% 56% 0}
+.density-btn[data-density="4"] .density-icon i:nth-child(2){inset:0 0 56% 56%}
+.density-btn[data-density="4"] .density-icon i:nth-child(3){inset:56% 56% 0 0}
+.density-btn[data-density="4"] .density-icon i:nth-child(4){inset:56% 0 0 56%}
+/* 2-up */
+.density-btn[data-density="2"] .density-icon i:nth-child(1){inset:0 56% 0 0;border-radius:2.5px}
+.density-btn[data-density="2"] .density-icon i:nth-child(2){inset:0 0 0 56%;border-radius:2.5px}
+.density-btn[data-density="2"] .density-icon i:nth-child(3),
+.density-btn[data-density="2"] .density-icon i:nth-child(4){inset:42% 42% 42% 42%;opacity:0}
+/* 1-up */
+.density-btn[data-density="1"] .density-icon i:nth-child(1){inset:0;border-radius:3px}
+.density-btn[data-density="1"] .density-icon i:nth-child(2),
+.density-btn[data-density="1"] .density-icon i:nth-child(3),
+.density-btn[data-density="1"] .density-icon i:nth-child(4){inset:48% 48% 48% 48%;opacity:0}
+/* gooey only while morphing */
+.density-btn.is-gooing .density-icon{
   background:#fff;
   filter:blur(1.7px) contrast(18);
 }
-.density-icon i{
-  position:absolute;display:block;background:#1f1c1a;border-radius:3px;
+.density-btn.is-gooing .density-icon i{
   opacity:1;
   transition:inset .58s cubic-bezier(.34,1.45,.64,1),border-radius .5s cubic-bezier(.34,1.45,.64,1);
 }
-/* 4-up */
-.density-btn[data-density="4"] .density-icon i:nth-child(1){inset:0 54% 54% 0}
-.density-btn[data-density="4"] .density-icon i:nth-child(2){inset:0 0 54% 54%}
-.density-btn[data-density="4"] .density-icon i:nth-child(3){inset:54% 54% 0 0}
-.density-btn[data-density="4"] .density-icon i:nth-child(4){inset:54% 0 0 54%}
-/* 2-up — pairs occupy the same cells so they melt together */
-.density-btn[data-density="2"] .density-icon i:nth-child(1),
-.density-btn[data-density="2"] .density-icon i:nth-child(3){inset:0 54% 0 0;border-radius:3px}
-.density-btn[data-density="2"] .density-icon i:nth-child(2),
-.density-btn[data-density="2"] .density-icon i:nth-child(4){inset:0 0 0 54%;border-radius:3px}
-/* 1-up — all four occupy the same square and fuse */
-.density-btn[data-density="1"] .density-icon i{inset:0;border-radius:3.5px}
+.density-btn.is-gooing[data-density="2"] .density-icon i:nth-child(1),
+.density-btn.is-gooing[data-density="2"] .density-icon i:nth-child(3){inset:0 56% 0 0;border-radius:2.5px}
+.density-btn.is-gooing[data-density="2"] .density-icon i:nth-child(2),
+.density-btn.is-gooing[data-density="2"] .density-icon i:nth-child(4){inset:0 0 0 56%;border-radius:2.5px}
+.density-btn.is-gooing[data-density="1"] .density-icon i{inset:0;border-radius:3px;opacity:1}
 
 /* Gallery density — density wins over breakpoints */
 .gallery[data-density="4"]{
@@ -1725,6 +1740,7 @@ body.is-sheet .mail-fab{
   .density-btn.is-pop{animation:none}
   .density-icon{filter:none;background:transparent}
   .density-icon i{transition:none}
+  .density-btn.is-gooing .density-icon{filter:none;background:transparent}
 }
 
 
@@ -4620,12 +4636,18 @@ window.vrSound=(function(){
 
   apply(cols, false);
 
+  let gooTimer=0;
   btn.addEventListener("click", ()=>{
     const idx=cycle.indexOf(galleryCols);
     const next=cycle[(idx+1)%cycle.length];
     btn.classList.remove("is-pop");
     void btn.offsetWidth;
     btn.classList.add("is-pop");
+    if(!reduce){
+      btn.classList.add("is-gooing");
+      clearTimeout(gooTimer);
+      gooTimer=setTimeout(function(){ btn.classList.remove("is-gooing"); }, 620);
+    }
     apply(next, true);
     if(window.vrSound) vrSound.tick(next===4?1.14:next===2?0.94:0.76);
   });
