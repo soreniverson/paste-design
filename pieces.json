@@ -93,5 +93,10 @@
     "day": "Day 19",
     "title": "Peel",
     "desc": "Pull the corner. The paper folds. It snaps free."
+  },
+  "day-20": {
+    "day": "Day 20",
+    "title": "Gravity",
+    "desc": "Type. Letters fall. They pile up."
   }
 }
